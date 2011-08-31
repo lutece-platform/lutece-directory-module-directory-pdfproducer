@@ -18,5 +18,14 @@
         <max-core-version/>
     </core-version-dependency>
     <db-pool-required>1</db-pool-required>
+    
+    <!-- RBAC Resources -->
+    <rbac-resource-types>
+        <rbac-resource-type>
+            <rbac-resource-type-class>
+                fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerResourceIdService
+			</rbac-resource-type-class>
+        </rbac-resource-type>
+    </rbac-resource-types>
     	
 </plug-in>
