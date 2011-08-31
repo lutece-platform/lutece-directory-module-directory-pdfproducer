@@ -60,6 +60,7 @@ import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.httpaccess.HttpAccess;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
@@ -209,7 +210,7 @@ public final class PDFUtils
 
         try
         {
-            image = Image.getInstance( AppPropertiesService.getProperty( PROPERTY_IMAGE_URL ) );
+            image = Image.getInstance( AppPathService.getBaseUrl(request) + AppPropertiesService.getProperty( PROPERTY_IMAGE_URL ) );
             image.setAlignment( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
                         PROPERTY_IMAGE_ALIGN ) ) );
 
