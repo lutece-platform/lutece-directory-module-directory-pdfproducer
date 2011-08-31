@@ -1,0 +1,49 @@
+<div id="content-box-actions">
+  	<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/CreateConfigProducer.jsp">
+    	<input type="hidden" name="id_directory" value="${idDirectory}" />
+      	<input type="submit" value="#i18n{module.directory.pdfproducer.manage.producer.config.button.create}" class="button bt-toolbar" />
+  	</form>
+</div>
+<div class="content-box">
+	<h2> #i18n{module.directory.pdfproducer.manage.producer.config.title} </h2>
+	<div class="content-box-content">
+		<#if config_list?has_content>
+			<table name="results_list" id="results_list">
+				<tr>
+					<th>
+						#i18n{module.directory.pdfproducer.manage.producer.config.name}
+					</th>
+					<th>
+						#i18n{module.directory.pdfproducer.manage.producer.config.type}
+					</th>		
+					<th>
+						#i18n{module.directory.pdfproducer.manage.producer.config.actions}
+					</th>	
+				</tr>				
+					<#list config_list as config>
+						<tr>
+							<td>
+								${config.name}
+							</td>
+							<td>
+								${config.type}								
+							</td>
+							<td>
+								<a href="jsp/admin/plugins/directory/modules/pdfproducer/RemoveConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
+									<img src="images/admin/skin/plugins/directory/actions/delete.png" alt="" title="">
+							  	</a>
+							  	<a href="jsp/admin/plugins/directory/modules/pdfproducer/ModifyConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
+									<img src="images/admin/skin/plugins/directory/actions/modify.png" alt="" title="">
+							  	</a>
+							  	<a href="jsp/admin/plugins/directory/modules/pdfproducer/DoCopyConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
+									<img src="images/admin/skin/plugins/directory/actions/copy.png" alt="" title="">
+							  	</a>
+							</td>							
+						</tr>
+					</#list>
+			</table>
+		<#else>
+			#i18n{module.directory.pdfproducer.manage.producer.config.empty.list} 
+		</#if>
+	</div>
+</div>

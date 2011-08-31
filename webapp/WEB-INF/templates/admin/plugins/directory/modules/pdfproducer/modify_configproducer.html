@@ -1,0 +1,91 @@
+<div class="content-box">
+	<h2> #i18n{module.directory.pdfproducer.create.producer.config.title} </h2>
+	<div class="content-box-content">
+		<form enctype="multipart/form-data" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoModifyConfigProducer.jsp">
+			<label for="title">#i18n{module.directory.pdfproducer.create.producer.config.name} * : </label>
+			<input type="text" maxlength="255" value="${config_producer.name}" size="80" id="" name="name">
+			<input type="hidden" name="id_directory" value="${idDirectory}" />
+			<input type="hidden" name="id_config_producer" value="${idConfigProducer}" />
+			
+			<table width="100%">
+				<tr> 
+					<th width="50%"> 
+						#i18n{directory.modify_directory.manage_entry.row_title}
+					</th>
+					<th width="25%"> 
+						#i18n{directory.modify_directory.manage_entry.row_type}
+					</th>
+					<th width="25%"> 
+						#i18n{directory.modify_directory.manage_entry.row_actions}
+					</th>
+				</tr>
+			
+				<#if entry_list?has_content>
+					<#list entry_list as entry>
+						<tr>
+							<#if entry.entryType.group>
+								<td>
+									${entry.title}				
+								</td>
+								<td>
+								<#if !entry.entryType.group>
+				           			#i18n{${entry.entryType.titleI18nKey}}
+				           		</#if>
+				           		</td>
+				           		<td>
+									<input type="hidden" name="config_entry" value="${entry.idEntry}">
+				           		</td>
+							<#else>
+								<td class="cell-indent">
+									${entry.title}				
+								</td>
+								<td>
+									<#if !entry.entryType.group>
+					           			#i18n{${entry.entryType.titleI18nKey}}
+					           		</#if>
+				           		</td>
+				           		<td>
+					           		<#if id_entry_list?has_content && id_entry_list?seq_contains(entry.idEntry)>
+										<input type="checkbox" name="config_entry" value="${entry.idEntry}" checked>
+									<#else>
+										<input type="checkbox" name="config_entry" value="${entry.idEntry}">
+									</#if>									
+				           		</td>
+							</#if>
+						</tr>
+						<#if entry.children?exists>
+							<#list entry.children as entry_child>	
+								<tr>						
+									<td class="cell-indent">
+					               		<#if entry_child.entryType.comment>
+					              			${entry_child.comment}
+					              		<#else>
+											${entry_child.title}
+										</#if>
+					               	</td>
+					               	<td>
+										<#if !entry_child.entryType.group>
+						           			#i18n{${entry_child.entryType.titleI18nKey}}
+						           		</#if>
+					           		</td>
+					           		<td>
+					           			<#if id_entry_list?has_content && id_entry_list?seq_contains(entry_child.idEntry)>
+											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" checked>
+										<#else>
+											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}">
+										</#if>
+					           		</td>
+				               	</tr>
+				            </#list>
+			            </#if>		
+					</#list>
+				</#if>		  
+			</table> 
+			<p>
+				<input class="button" type="submit" name="save" value="#i18n{module.directory.pdfproducer.create.producer.config.button.create}">
+				<input class="button" type="submit" name="cancel" value="#i18n{module.directory.pdfproducer.create.producer.config.button.cancel}">		
+			</p>	
+		</form>	
+	</div>
+</div>
+		
