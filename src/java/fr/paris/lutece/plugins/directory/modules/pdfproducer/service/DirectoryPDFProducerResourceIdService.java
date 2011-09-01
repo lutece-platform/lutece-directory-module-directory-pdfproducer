@@ -22,7 +22,7 @@ public class DirectoryPDFProducerResourceIdService extends ResourceIdService
     public static final String PERMISSION_GENERATE_PDF = "PDFPRODUCER";
     
     /** Permission for mylutece user visualisation */
-    private static final String RESOURCE_TYPE = "DIRECTORY_PDFPRODUCER_TYPE";
+    public static final String RESOURCE_TYPE = "DIRECTORY_PDFPRODUCER_TYPE";
     private static final String PROPERTY_LABEL_GENERATE_PDF = "module.directory.pdfproducer.permission.label.generate_pdf";
 	
 	@Override
