@@ -33,9 +33,6 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.directory.business.RecordHome;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerResourceIdService;
@@ -44,6 +41,9 @@ import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -54,6 +54,7 @@ public class DirectoryPDFJspBean extends PluginAdminPageJspBean
 {
     // JSP URL
     public static final String PROPERTY_PATH_FILES_GENERATED = "directory.zipbasket.root.path.repository.filesgenerated";
+
     //parameters
     public static final String PARAMETER_ID_DIRECTORY_RECORD = "id_directory_record";
 
@@ -62,18 +63,21 @@ public class DirectoryPDFJspBean extends PluginAdminPageJspBean
      * @param request request
      * @param response response
      */
-    public void doDownloadPDF( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException
+    public void doDownloadPDF( HttpServletRequest request, HttpServletResponse response )
+        throws AccessDeniedException
     {
-    	String strIdDirectoryRecord = request.getParameter( PARAMETER_ID_DIRECTORY_RECORD );
-    	Record record = RecordHome.findByPrimaryKey( DirectoryUtils.convertStringToInt(strIdDirectoryRecord), getPlugin(  ) );
-    	    	
-    	if ( ( record == null ) ||
+        String strIdDirectoryRecord = request.getParameter( PARAMETER_ID_DIRECTORY_RECORD );
+        Record record = RecordHome.findByPrimaryKey( DirectoryUtils.convertStringToInt( strIdDirectoryRecord ),
+                getPlugin(  ) );
+
+        if ( ( record == null ) ||
                 !RBACService.isAuthorized( DirectoryPDFProducerResourceIdService.RESOURCE_TYPE,
                     Integer.toString( record.getDirectory(  ).getIdDirectory(  ) ),
-                    DirectoryPDFProducerResourceIdService.PERMISSION_GENERATE_PDF , getUser(  ) ) )
+                    DirectoryPDFProducerResourceIdService.PERMISSION_GENERATE_PDF, getUser(  ) ) )
         {
             throw new AccessDeniedException(  );
         }
+
         PDFUtils.doDownloadPDF( request, response, getPlugin(  ) );
     }
 }

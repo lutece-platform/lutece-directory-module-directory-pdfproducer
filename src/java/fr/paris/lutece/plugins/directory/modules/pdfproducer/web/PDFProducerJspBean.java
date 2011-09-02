@@ -44,6 +44,7 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
+import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
@@ -71,7 +72,9 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     //Parameters
     private static final String PARAMETER_ID_DIRECTORY = "id_directory";
     private static final String PARAMETER_ID_CONFIG_PRODUCER = "id_config_producer";
+    private static final String PARAMETER_CHECK_PAGE_CONFIG = "page_config";
     private static final String PARAMETER_CONFIG_ENTRY = "config_entry";
+    private static final String PARAMETER_CREATECONFIG_SAVE = "save";
     private static final String PARAMETER_CREATECONFIG_CANCEL = "cancel";
     private static final String PARAMETER_CREATECONFIG_NAME = "name";
 
@@ -82,12 +85,15 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     private static final String MARK_ID_CONFIG_PRODUCER = "idConfigProducer";
     private static final String MARK_ID_ENTRY_LIST = "id_entry_list";
     private static final String MARK_CONFIG_PRODUCER = "config_producer";
+    private static final String MARK_CREATECONFIG_NAME = "config_name";
 
     // JSP URL
     private static final String JSP_MANAGE_CONFIG_PRODUCER = "jsp/admin/plugins/directory/modules/pdfproducer/ManageConfigProducer.jsp";
     private static final String JSP_CREATE_CONFIG_PRODUCER = "jsp/admin/plugins/directory/modules/pdfproducer/CreateConfigProducer.jsp";
+    private static final String JSP_CREATE_CONFIG_PRODUCER_BIS = "CreateConfigProducer.jsp";
     private static final String JSP_DO_DELETE_CONFIG_PRODUCER = "jsp/admin/plugins/directory/modules/pdfproducer/DoRemoveConfigProducer.jsp";
     private static final String JSP_MODIFY_CONFIG_PRODUCER = "jsp/admin/plugins/directory/modules/pdfproducer/ModifyConfigProducer.jsp";
+    private static final String JSP_MODIFY_CONFIG_PRODUCER_BIS = "ModifyConfigProducer.jsp";
 
     // Messages (I18n keys)
     private static final String MESSAGE_ADD_NEW_CONFIG = "module.directory.pdfproducer.message.producer.config.confirm.create";
@@ -95,7 +101,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_NAME_CONFIG_MISSED = "module.directory.pdfproducer.message.producer.config.name.missed";
     private static final String MESSAGE_DELETE_CONFIG = "module.directory.pdfproducer.message.producer.config.delete";
     private static final String MESSAGE_DELETED_CONFIG = "module.directory.pdfproducer.message.producer.config.deleted";
-    
+
     // Type Config
     private static final String TYPE_CONFIG_PDF = "PDF";
 
@@ -144,6 +150,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>(  );
 
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
+        String strNameConfig = request.getParameter( PARAMETER_CREATECONFIG_NAME );
         String[] listIdEntry = request.getParameterValues( PARAMETER_CONFIG_ENTRY );
 
         List<IEntry> listEntry = DirectoryUtils.getFormEntries( DirectoryUtils.convertStringToInt( strIdDirectory ),
@@ -151,6 +158,11 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         model.put( MARK_ENTRY_LIST, listEntry );
         model.put( MARK_ID_ENTRY_LIST, listIdEntry );
         model.put( MARK_ID_DIRECTORY, strIdDirectory );
+
+        if ( StringUtils.isNotBlank( strNameConfig ) )
+        {
+            model.put( MARK_CREATECONFIG_NAME, strNameConfig );
+        }
 
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_CREATE_CONFIG, getLocale(  ), model );
 
@@ -183,7 +195,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
         url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
 
-        if ( !request.getParameterMap(  ).containsKey( PARAMETER_CREATECONFIG_CANCEL ) )
+        if ( request.getParameterMap(  ).containsKey( PARAMETER_CREATECONFIG_SAVE ) )
         {
             if ( StringUtils.isBlank( request.getParameter( PARAMETER_CREATECONFIG_NAME ) ) )
             {
@@ -212,10 +224,17 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ADD_NEW_CONFIG, url.getUrl(  ),
                 AdminMessage.TYPE_INFO );
         }
-        else
+        else if ( request.getParameterMap(  ).containsKey( PARAMETER_CREATECONFIG_CANCEL ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANCEL_CREATE, url.getUrl(  ),
                 AdminMessage.TYPE_INFO );
+        }
+        else
+        {
+            String strUrlCreate = JSP_CREATE_CONFIG_PRODUCER_BIS + "?" + PARAMETER_ID_DIRECTORY + "=" + strIdDirectory;
+
+            return doCheckAll( strUrlCreate, strIdDirectory, listIdEntry,
+                request.getParameter( PARAMETER_CREATECONFIG_NAME ) );
         }
     }
 
@@ -266,12 +285,27 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     public String modifyConfigProducer( HttpServletRequest request )
     {
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
+        String strNameConfig = request.getParameter( PARAMETER_CREATECONFIG_NAME );
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
+        String strCheckPageConfig = request.getParameter( PARAMETER_CHECK_PAGE_CONFIG );
+        String[] listStrIdEntry = request.getParameterValues( PARAMETER_CONFIG_ENTRY );
+
+        List<Integer> listIdEntry = new ArrayList<Integer>(  );
+
+        if ( listStrIdEntry != null )
+        {
+            for ( int i = 0; i < listStrIdEntry.length; i++ )
+            {
+                listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            }
+        }
 
         Map<String, Object> model = new HashMap<String, Object>(  );
         ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-        List<Integer> listIdEntry = configProducerService.loadListConfigEntry( getPlugin(  ),
-                DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
+
+        configProducerService.loadListConfigEntry( getPlugin(  ),
+            DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
+
         List<IEntry> listEntry = DirectoryUtils.getFormEntries( DirectoryUtils.convertStringToInt( strIdDirectory ),
                 getPlugin(  ), getUser(  ) );
 
@@ -279,10 +313,26 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
                 DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
 
         model.put( MARK_ENTRY_LIST, listEntry );
-        model.put( MARK_ID_ENTRY_LIST, listIdEntry );
+
+        if ( StringUtils.isNotBlank( strCheckPageConfig ) )
+        {
+            model.put( MARK_ID_ENTRY_LIST, listIdEntry );
+        }
+        else
+        {
+            model.put( MARK_ID_ENTRY_LIST,
+                configProducerService.loadListConfigEntry( getPlugin(  ),
+                    DirectoryUtils.convertStringToInt( strIdConfigProducer ) ) );
+        }
+
         model.put( MARK_ID_DIRECTORY, strIdDirectory );
         model.put( MARK_ID_CONFIG_PRODUCER, strIdConfigProducer );
         model.put( MARK_CONFIG_PRODUCER, configProducer );
+
+        if ( StringUtils.isNotBlank( strNameConfig ) )
+        {
+            model.put( MARK_CREATECONFIG_NAME, strNameConfig );
+        }
 
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MODIFY_CONFIG, getLocale(  ), model );
 
@@ -298,7 +348,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     {
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
-
+        String strCheckPageConfig = request.getParameter( PARAMETER_CHECK_PAGE_CONFIG );
         String[] listStrIdEntry = request.getParameterValues( PARAMETER_CONFIG_ENTRY );
         List<Integer> listIdEntry = new ArrayList<Integer>(  );
 
@@ -316,13 +366,14 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
         url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
 
-        if ( !request.getParameterMap(  ).containsKey( PARAMETER_CREATECONFIG_CANCEL ) )
+        if ( request.getParameterMap(  ).containsKey( PARAMETER_CREATECONFIG_SAVE ) )
         {
             if ( StringUtils.isBlank( request.getParameter( PARAMETER_CREATECONFIG_NAME ) ) )
             {
                 url = new UrlItem( JSP_MODIFY_CONFIG_PRODUCER );
                 url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
                 url.addParameter( PARAMETER_ID_CONFIG_PRODUCER, strIdConfigProducer );
+                url.addParameter( PARAMETER_CHECK_PAGE_CONFIG, strCheckPageConfig );
 
                 if ( !listIdEntry.isEmpty(  ) )
                 {
@@ -347,10 +398,19 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ADD_NEW_CONFIG, url.getUrl(  ),
                 AdminMessage.TYPE_INFO );
         }
-        else
+        else if ( request.getParameterMap(  ).containsKey( PARAMETER_CREATECONFIG_CANCEL ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANCEL_CREATE, url.getUrl(  ),
                 AdminMessage.TYPE_INFO );
+        }
+        else
+        {
+            String strUrlModify = JSP_MODIFY_CONFIG_PRODUCER_BIS + "?" + PARAMETER_ID_DIRECTORY + "=" + strIdDirectory +
+                "&" + PARAMETER_CHECK_PAGE_CONFIG + "=" + strIdConfigProducer + "&" + PARAMETER_ID_CONFIG_PRODUCER +
+                "=" + strCheckPageConfig;
+
+            return doCheckAll( strUrlModify, strIdDirectory, listIdEntry,
+                request.getParameter( PARAMETER_CREATECONFIG_NAME ) );
         }
     }
 
@@ -404,6 +464,55 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         if ( !listIdEntryToDelete.isEmpty(  ) )
         {
             listIdEntry.removeAll( listIdEntryToDelete );
+        }
+    }
+
+    /**
+         * Method to check all checkbox
+         * @param strUrlRedirect url to redirect
+         * @param strIdDirectory id directory
+         * @param listIdEntry list of id Entry
+         * @param strNameconfig name of config
+         * @return final url with params
+         */
+    private String doCheckAll( String strUrlRedirect, String strIdDirectory, List<Integer> listIdEntry,
+        String strNameconfig )
+    {
+        List<IEntry> listEntry = DirectoryUtils.getFormEntries( DirectoryUtils.convertStringToInt( strIdDirectory ),
+                getPlugin(  ), getUser(  ) );
+
+        for ( IEntry entry : listEntry )
+        {
+            if ( entry.getEntryType(  ).getGroup(  ) )
+            {
+                if ( entry.getChildren(  ) != null )
+                {
+                    for ( IEntry child : entry.getChildren(  ) )
+                    {
+                        if ( !listIdEntry.contains( child.getIdEntry(  ) ) )
+                        {
+                            strUrlRedirect += ( "&" + PARAMETER_CONFIG_ENTRY + "=" +
+                            String.valueOf( child.getIdEntry(  ) ) );
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if ( !listIdEntry.contains( entry.getIdEntry(  ) ) )
+                {
+                    strUrlRedirect += ( "&" + PARAMETER_CONFIG_ENTRY + "=" + String.valueOf( entry.getIdEntry(  ) ) );
+                }
+            }
+        }
+
+        if ( StringUtils.isNotBlank( strNameconfig ) )
+        {
+            return strUrlRedirect += ( "&" + PARAMETER_CREATECONFIG_NAME + "=" + strNameconfig );
+        }
+        else
+        {
+            return strUrlRedirect;
         }
     }
 }

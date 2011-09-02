@@ -3,7 +3,11 @@
 	<div class="content-box-content">
 		<form enctype="multipart/form-data" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoCreateConfigProducer.jsp">
 			<label for="title">#i18n{module.directory.pdfproducer.create.producer.config.name} * : </label>
-			<input type="text" maxlength="255" value="" size="80" id="" name="name">
+			<#if config_name?exists>
+				<input type="text" maxlength="255" value="${config_name}" size="80" id="" name="name">
+			<#else>
+				<input type="text" maxlength="255" value="" size="80" id="" name="name">
+			</#if>			
 			<input type="hidden" name="id_directory" value="${idDirectory}" />
 			<table width="100%">
 				<tr> 
@@ -83,6 +87,7 @@
 			<p>
 				<input class="button" type="submit" name="save" value="#i18n{module.directory.pdfproducer.create.producer.config.button.create}">
 				<input class="button" type="submit" name="cancel" value="#i18n{module.directory.pdfproducer.create.producer.config.button.cancel}">		
+				<input class="button" type="submit" name="allchecked" value="#i18n{module.directory.pdfproducer.create.producer.config.button.allchecked}">
 			</p>	
 		</form>	
 	</div>
