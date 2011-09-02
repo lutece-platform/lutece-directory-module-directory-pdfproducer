@@ -33,6 +33,15 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 import fr.paris.lutece.plugins.directory.business.EntryHome;
 import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
@@ -44,18 +53,8 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
-import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -231,9 +230,9 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         }
         else
         {
-            String strUrlCreate = JSP_CREATE_CONFIG_PRODUCER_BIS + "?" + PARAMETER_ID_DIRECTORY + "=" + strIdDirectory;
-
-            return doCheckAll( strUrlCreate, strIdDirectory, listIdEntry,
+        	url = new UrlItem( JSP_CREATE_CONFIG_PRODUCER_BIS );
+        	url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
+            return doCheckAll( url , strIdDirectory, listIdEntry,
                 request.getParameter( PARAMETER_CREATECONFIG_NAME ) );
         }
     }
@@ -405,12 +404,13 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         }
         else
         {
-            String strUrlModify = JSP_MODIFY_CONFIG_PRODUCER_BIS + "?" + PARAMETER_ID_DIRECTORY + "=" + strIdDirectory +
-                "&" + PARAMETER_CHECK_PAGE_CONFIG + "=" + strIdConfigProducer + "&" + PARAMETER_ID_CONFIG_PRODUCER +
-                "=" + strCheckPageConfig;
-
-            return doCheckAll( strUrlModify, strIdDirectory, listIdEntry,
+            url = new UrlItem( JSP_MODIFY_CONFIG_PRODUCER_BIS );
+        	url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
+        	url.addParameter( PARAMETER_CHECK_PAGE_CONFIG, strCheckPageConfig );
+        	url.addParameter( PARAMETER_ID_CONFIG_PRODUCER, strIdConfigProducer );
+            return doCheckAll( url , strIdDirectory, listIdEntry,
                 request.getParameter( PARAMETER_CREATECONFIG_NAME ) );
+
         }
     }
 
@@ -475,7 +475,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
          * @param strNameconfig name of config
          * @return final url with params
          */
-    private String doCheckAll( String strUrlRedirect, String strIdDirectory, List<Integer> listIdEntry,
+    private String doCheckAll( UrlItem url, String strIdDirectory, List<Integer> listIdEntry,
         String strNameconfig )
     {
         List<IEntry> listEntry = DirectoryUtils.getFormEntries( DirectoryUtils.convertStringToInt( strIdDirectory ),
@@ -491,8 +491,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
                     {
                         if ( !listIdEntry.contains( child.getIdEntry(  ) ) )
                         {
-                            strUrlRedirect += ( "&" + PARAMETER_CONFIG_ENTRY + "=" +
-                            String.valueOf( child.getIdEntry(  ) ) );
+                        	url.addParameter(PARAMETER_CONFIG_ENTRY, String.valueOf( child.getIdEntry(  ) ));
                         }
                     }
                 }
@@ -501,18 +500,19 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             {
                 if ( !listIdEntry.contains( entry.getIdEntry(  ) ) )
                 {
-                    strUrlRedirect += ( "&" + PARAMETER_CONFIG_ENTRY + "=" + String.valueOf( entry.getIdEntry(  ) ) );
+                	url.addParameter(PARAMETER_CONFIG_ENTRY, String.valueOf( entry.getIdEntry(  ) ));
                 }
             }
         }
 
         if ( StringUtils.isNotBlank( strNameconfig ) )
         {
-            return strUrlRedirect += ( "&" + PARAMETER_CREATECONFIG_NAME + "=" + strNameconfig );
+        	url.addParameter(PARAMETER_CREATECONFIG_NAME, strNameconfig );
+        	return url.getUrl();
         }
         else
         {
-            return strUrlRedirect;
+            return url.getUrl();
         }
     }
 }
