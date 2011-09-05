@@ -103,18 +103,9 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
     // Type Config
     private static final String TYPE_CONFIG_PDF = "PDF";
-
-    /**
-     * return the service to manage configproducer
-     * @return manageConfigProducerService
-     */
-    private static ConfigProducerService getDirectoryManageZipBasketService(  )
-    {
-        ConfigProducerService manageConfigProducerService = (ConfigProducerService) SpringContextService.getPluginBean( DirectoryPDFProducerPlugin.PLUGIN_NAME,
-                "directory-pdfproducer.manageConfigProducer" );
-
-        return manageConfigProducerService;
-    }
+    
+    private static final ConfigProducerService _manageConfigProducerService = (ConfigProducerService) SpringContextService.getPluginBean( DirectoryPDFProducerPlugin.PLUGIN_NAME,
+    "directory-pdfproducer.manageConfigProducer" );
 
     /**
      * Display the page to manage configuration
@@ -125,10 +116,8 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
-
-        ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-
-        List<ConfigProducer> listConfigProducer = configProducerService.loadListProducerConfig( getPlugin(  ),
+        
+        List<ConfigProducer> listConfigProducer = _manageConfigProducerService.loadListProducerConfig( getPlugin(  ),
                 DirectoryUtils.convertStringToInt( strIdDirectory ), TYPE_CONFIG_PDF );
 
         model.put( MARK_ID_DIRECTORY, strIdDirectory );
@@ -184,7 +173,10 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         {
             for ( int i = 0; i < listStrIdEntry.length; i++ )
             {
-                listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            	if ( StringUtils.isNotBlank( listStrIdEntry[i] ) && StringUtils.isNumeric( listStrIdEntry[i] ) )
+            	{
+            		listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            	}                
             }
         }
 
@@ -214,9 +206,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             }
             else
             {
-                ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-
-                configProducerService.addNewConfig( getPlugin(  ), request.getParameter( PARAMETER_CREATECONFIG_NAME ),
+                _manageConfigProducerService.addNewConfig( getPlugin(  ), request.getParameter( PARAMETER_CREATECONFIG_NAME ),
                     DirectoryUtils.convertStringToInt( strIdDirectory ), TYPE_CONFIG_PDF, listIdEntry );
             }
 
@@ -268,8 +258,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         UrlItem url = new UrlItem( JSP_MANAGE_CONFIG_PRODUCER );
         url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
 
-        ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-        configProducerService.deleteProducerConfig( getPlugin(  ),
+        _manageConfigProducerService.deleteProducerConfig( getPlugin(  ),
             DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
 
         return AdminMessageService.getMessageUrl( request, MESSAGE_DELETED_CONFIG, url.getUrl(  ),
@@ -295,20 +284,21 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         {
             for ( int i = 0; i < listStrIdEntry.length; i++ )
             {
-                listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            	if ( StringUtils.isNotBlank( listStrIdEntry[i] ) && StringUtils.isNumeric( listStrIdEntry[i] ) ) 
+            	{
+            		listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            	}                
             }
         }
 
         Map<String, Object> model = new HashMap<String, Object>(  );
-        ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-
-        configProducerService.loadListConfigEntry( getPlugin(  ),
+        _manageConfigProducerService.loadListConfigEntry( getPlugin(  ),
             DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
 
         List<IEntry> listEntry = DirectoryUtils.getFormEntries( DirectoryUtils.convertStringToInt( strIdDirectory ),
                 getPlugin(  ), getUser(  ) );
 
-        ConfigProducer configProducer = configProducerService.loadConfig( getPlugin(  ),
+        ConfigProducer configProducer = _manageConfigProducerService.loadConfig( getPlugin(  ),
                 DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
 
         model.put( MARK_ENTRY_LIST, listEntry );
@@ -320,7 +310,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         else
         {
             model.put( MARK_ID_ENTRY_LIST,
-                configProducerService.loadListConfigEntry( getPlugin(  ),
+            		_manageConfigProducerService.loadListConfigEntry( getPlugin(  ),
                     DirectoryUtils.convertStringToInt( strIdConfigProducer ) ) );
         }
 
@@ -355,7 +345,10 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         {
             for ( int i = 0; i < listStrIdEntry.length; i++ )
             {
-                listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            	if ( StringUtils.isNotBlank( listStrIdEntry[i] ) && StringUtils.isNumeric( listStrIdEntry[i] ) )
+            	{
+            		listIdEntry.add( Integer.valueOf( listStrIdEntry[i] ) );
+            	}                
             }
         }
 
@@ -387,9 +380,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             }
             else
             {
-                ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-
-                configProducerService.modifyProducerConfig( getPlugin(  ),
+                _manageConfigProducerService.modifyProducerConfig( getPlugin(  ),
                     request.getParameter( PARAMETER_CREATECONFIG_NAME ),
                     DirectoryUtils.convertStringToInt( strIdConfigProducer ), TYPE_CONFIG_PDF, listIdEntry );
             }
@@ -422,8 +413,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
     public String doCopyConfigProducer( HttpServletRequest request )
     {
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
-        ConfigProducerService configProducerService = getDirectoryManageZipBasketService(  );
-        configProducerService.copyProducerConfig( getPlugin(  ),
+        _manageConfigProducerService.copyProducerConfig( getPlugin(  ),
             DirectoryUtils.convertStringToInt( strIdConfigProducer ), request.getLocale(  ) );
 
         return manageConfigProducer( request );

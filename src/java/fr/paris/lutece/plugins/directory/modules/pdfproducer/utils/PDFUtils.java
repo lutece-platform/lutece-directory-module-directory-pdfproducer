@@ -312,9 +312,8 @@ public final class PDFUtils
                 {
                     for ( IEntry child : entry.getChildren(  ) )
                     {
-                        if ( child.isShownInExport(  ) &&
-                                ( listIdEntryConfig.isEmpty(  ) ||
-                                listIdEntryConfig.contains( Integer.valueOf( child.getIdEntry(  ) ) ) ) )
+                        if ( listIdEntryConfig.isEmpty(  ) ||
+                                listIdEntryConfig.contains( Integer.valueOf( child.getIdEntry(  ) ) ) )
                         {
                             try
                             {
@@ -331,9 +330,8 @@ public final class PDFUtils
             }
             else
             {
-                if ( entry.isShownInExport(  ) &&
-                        ( listIdEntryConfig.isEmpty(  ) ||
-                        listIdEntryConfig.contains( Integer.valueOf( entry.getIdEntry(  ) ) ) ) )
+                if ( listIdEntryConfig.isEmpty(  ) ||
+                        listIdEntryConfig.contains( Integer.valueOf( entry.getIdEntry(  ) ) ) )
                 {
                     try
                     {
