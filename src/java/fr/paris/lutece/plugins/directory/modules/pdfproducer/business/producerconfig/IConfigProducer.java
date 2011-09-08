@@ -33,131 +33,75 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-
-/**
- * Configuration to generate PDF.
- * AdminUser can select different directory entry to make them appear in the PDF.
- *
- */
-public class ConfigProducer implements IConfigProducer
+public interface IConfigProducer
 {
-    private int _nIdProducerConfig;
-    private String _strName;
-    private int _nIdEntryFileName;
-    private int _nIdDirectory;
-    private String _strType;
-    private String _strTypeConfigFileName;
-    private String _strTextFileName;
-
     /**
-     * @return the _nIdProducerConfig
-     */
-    public int getIdProducerConfig(  )
-    {
-        return _nIdProducerConfig;
-    }
+    * @return the _nIdProducerConfig
+    */
+    int getIdProducerConfig(  );
 
     /**
      * @param nIdProducerConfig the _nIdProducerConfig to set
      */
-    public void setIdProducerConfig( int nIdProducerConfig )
-    {
-        _nIdProducerConfig = nIdProducerConfig;
-    }
+    void setIdProducerConfig( int nIdProducerConfig );
 
     /**
      * @return the _strName
      */
-    public String getName(  )
-    {
-        return _strName;
-    }
+    String getName(  );
 
     /**
      * @param nIdEntryFileName the _nIdEntryFileName to set
      */
-    public void setIdEntryFileName( int nIdEntryFileName )
-    {
-        _nIdEntryFileName = nIdEntryFileName;
-    }
+    void setIdEntryFileName( int nIdEntryFileName );
 
     /**
      * @return the _nIdEntryFileName
      */
-    public int getIdEntryFileName(  )
-    {
-        return _nIdEntryFileName;
-    }
+    int getIdEntryFileName(  );
 
     /**
      * @param strName the _strName to set
      */
-    public void setName( String strName )
-    {
-        _strName = strName;
-    }
+    void setName( String strName );
 
     /**
      * @return the _nIdDirectory
      */
-    public int getIdDirectory(  )
-    {
-        return _nIdDirectory;
-    }
+    int getIdDirectory(  );
 
     /**
      * @param nIdDirectory the _nIdDirectory to set
      */
-    public void setIdDirectory( int nIdDirectory )
-    {
-        _nIdDirectory = nIdDirectory;
-    }
+    void setIdDirectory( int nIdDirectory );
 
     /**
      * @return the _strType
      */
-    public String getType(  )
-    {
-        return _strType;
-    }
+    String getType(  );
 
     /**
      * @param strType the _strType to set
      */
-    public void setType( String strType )
-    {
-        _strType = strType;
-    }
+    void setType( String strType );
 
     /**
      * @return the _strTypeConfigFileName
      */
-    public String getTypeConfigFileName(  )
-    {
-        return _strTypeConfigFileName;
-    }
+    String getTypeConfigFileName(  );
 
     /**
      * @param strTypeConfigFileName the _strTypeConfigFileName to set
      */
-    public void setTypeConfigFileName( String strTypeConfigFileName )
-    {
-        _strTypeConfigFileName = strTypeConfigFileName;
-    }
+    void setTypeConfigFileName( String strTypeConfigFileName );
 
     /**
      * @return the _strTextFileName
      */
-    public String getTextFileName(  )
-    {
-        return _strTextFileName;
-    }
+    String getTextFileName(  );
 
     /**
      * @param strTextFileName the _strTextFileName to set
      */
-    public void setTextFileName( String strTextFileName )
-    {
-        _strTextFileName = strTextFileName;
-    }
+    void setTextFileName( String strTextFileName );
 }

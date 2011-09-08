@@ -33,28 +33,27 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
+import fr.paris.lutece.portal.service.i18n.I18nService;
+
+import java.util.Locale;
+
 
 /**
- * Configuration to generate PDF.
- * AdminUser can select different directory entry to make them appear in the PDF.
+ * DefaultConfigProducer
  *
  */
-public class ConfigProducer implements IConfigProducer
+public class DefaultConfigProducer implements IConfigProducer
 {
-    private int _nIdProducerConfig;
-    private String _strName;
-    private int _nIdEntryFileName;
-    private int _nIdDirectory;
+    private static String PROPERTY_DEFAULT_CONFIG_NAME = "module.directory.pdfproducer.create.producer.default.config.name";
+    private static final String DEFAULT_TYPE_FILE_NAME = "default";
     private String _strType;
-    private String _strTypeConfigFileName;
-    private String _strTextFileName;
 
     /**
      * @return the _nIdProducerConfig
      */
     public int getIdProducerConfig(  )
     {
-        return _nIdProducerConfig;
+        return -1;
     }
 
     /**
@@ -62,7 +61,6 @@ public class ConfigProducer implements IConfigProducer
      */
     public void setIdProducerConfig( int nIdProducerConfig )
     {
-        _nIdProducerConfig = nIdProducerConfig;
     }
 
     /**
@@ -70,7 +68,15 @@ public class ConfigProducer implements IConfigProducer
      */
     public String getName(  )
     {
-        return _strName;
+        return null;
+    }
+
+    /**
+     * @return the _strName
+     */
+    public String getName( Locale locale )
+    {
+        return I18nService.getLocalizedString( PROPERTY_DEFAULT_CONFIG_NAME, locale );
     }
 
     /**
@@ -78,7 +84,6 @@ public class ConfigProducer implements IConfigProducer
      */
     public void setIdEntryFileName( int nIdEntryFileName )
     {
-        _nIdEntryFileName = nIdEntryFileName;
     }
 
     /**
@@ -86,7 +91,15 @@ public class ConfigProducer implements IConfigProducer
      */
     public int getIdEntryFileName(  )
     {
-        return _nIdEntryFileName;
+        return -1;
+    }
+
+    /**
+     * @return the FileName
+     */
+    public int getFileName(  )
+    {
+        return -1;
     }
 
     /**
@@ -94,7 +107,6 @@ public class ConfigProducer implements IConfigProducer
      */
     public void setName( String strName )
     {
-        _strName = strName;
     }
 
     /**
@@ -102,7 +114,7 @@ public class ConfigProducer implements IConfigProducer
      */
     public int getIdDirectory(  )
     {
-        return _nIdDirectory;
+        return -1;
     }
 
     /**
@@ -110,7 +122,6 @@ public class ConfigProducer implements IConfigProducer
      */
     public void setIdDirectory( int nIdDirectory )
     {
-        _nIdDirectory = nIdDirectory;
     }
 
     /**
@@ -134,7 +145,7 @@ public class ConfigProducer implements IConfigProducer
      */
     public String getTypeConfigFileName(  )
     {
-        return _strTypeConfigFileName;
+        return DEFAULT_TYPE_FILE_NAME;
     }
 
     /**
@@ -142,7 +153,6 @@ public class ConfigProducer implements IConfigProducer
      */
     public void setTypeConfigFileName( String strTypeConfigFileName )
     {
-        _strTypeConfigFileName = strTypeConfigFileName;
     }
 
     /**
@@ -150,7 +160,7 @@ public class ConfigProducer implements IConfigProducer
      */
     public String getTextFileName(  )
     {
-        return _strTextFileName;
+        return null;
     }
 
     /**
@@ -158,6 +168,5 @@ public class ConfigProducer implements IConfigProducer
      */
     public void setTextFileName( String strTextFileName )
     {
-        _strTextFileName = strTextFileName;
     }
 }

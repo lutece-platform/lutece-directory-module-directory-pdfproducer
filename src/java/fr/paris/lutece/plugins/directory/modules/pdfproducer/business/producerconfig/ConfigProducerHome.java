@@ -63,12 +63,15 @@ public final class ConfigProducerHome
      * @param strConfigName The name of configuration
      * @param nIdDirectory The id of directory
      * @param strConfigType The type of producer that uses this configuration
+     * @param strTextFileName File name ( if use text )
+     * @param strTypeConfigFileName config type for file name
      * @param listIdEntry The list of entry id that appear in configuration
      */
-    public static void addNewConfig( Plugin plugin, String strConfigName, int nIdDirectory, String strConfigType,
-        List<Integer> listIdEntry )
+    public static void addNewConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdDirectory,
+        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry )
     {
-        _dao.addNewConfig( plugin, strConfigName, nIdDirectory, strConfigType, listIdEntry );
+        _dao.addNewConfig( plugin, strConfigName, nIdEntryFileName, nIdDirectory, strConfigType, strTextFileName,
+            strTypeConfigFileName, listIdEntry );
     }
 
     /**
@@ -123,10 +126,12 @@ public final class ConfigProducerHome
      * @param strConfigType config type
      * @param listIdEntry list of id entry
      */
-    public static void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdConfigProducer,
-        String strConfigType, List<Integer> listIdEntry )
+    public static void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdEntryFileName,
+        int nIdConfigProducer, String strConfigType, String strTextFileName, String strTypeConfigFileName,
+        List<Integer> listIdEntry )
     {
-        _dao.modifyProducerConfig( plugin, strConfigName, nIdConfigProducer, strConfigType, listIdEntry );
+        _dao.modifyProducerConfig( plugin, strConfigName, nIdEntryFileName, nIdConfigProducer, strConfigType,
+            strTextFileName, strTypeConfigFileName, listIdEntry );
     }
 
     /**
@@ -168,5 +173,38 @@ public final class ConfigProducerHome
     public static void addActionsDirectoryRecord( Plugin plugin )
     {
         _dao.addActionsDirectoryRecord( plugin );
+    }
+
+    /**
+     * This method loads a default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @return id config
+     */
+    public static int loadDefaultConfig( Plugin plugin, int nIdDirectory )
+    {
+        return _dao.loadDefaultConfig( plugin, nIdDirectory );
+    }
+
+    /**
+     * This method add default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @param nIdConfig id config
+     */
+    public static void createDefaultConfig( Plugin plugin, int nIdDirectory, int nIdConfig )
+    {
+        _dao.createDefaultConfig( plugin, nIdDirectory, nIdConfig );
+    }
+
+    /**
+     * This method update default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @param nIdConfig id config
+     */
+    public static void updateDefaultConfig( Plugin plugin, int nIdDirectory, int nIdConfig )
+    {
+        _dao.updateDefaultConfig( plugin, nIdDirectory, nIdConfig );
     }
 }

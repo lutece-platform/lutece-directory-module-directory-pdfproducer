@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerco
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducerHome;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,10 +56,11 @@ public class ConfigProducerService
      * @param strConfigType The type of producer that uses this configuration
      * @param listIdEntry The list of entry id that appear in configuration
      */
-    public void addNewConfig( Plugin plugin, String strConfigName, int nIdDirectory, String strConfigType,
-        List<Integer> listIdEntry )
+    public void addNewConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdDirectory,
+        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry )
     {
-        ConfigProducerHome.addNewConfig( plugin, strConfigName, nIdDirectory, strConfigType, listIdEntry );
+        ConfigProducerHome.addNewConfig( plugin, strConfigName, nIdEntryFileName, nIdDirectory, strConfigType,
+            strTextFileName, strTypeConfigFileName, listIdEntry );
     }
 
     /**
@@ -92,6 +94,11 @@ public class ConfigProducerService
      */
     public List<Integer> loadListConfigEntry( Plugin plugin, int nIdConfig )
     {
+        if ( ( nIdConfig == -1 ) || ( nIdConfig == 0 ) )
+        {
+            return new ArrayList<Integer>(  );
+        }
+
         return ConfigProducerHome.loadListConfigEntry( plugin, nIdConfig );
     }
 
@@ -113,10 +120,11 @@ public class ConfigProducerService
      * @param strConfigType config type
      * @param listIdEntry list of id entry
      */
-    public void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdConfigProducer, String strConfigType,
-        List<Integer> listIdEntry )
+    public void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdConfigProducer,
+        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry )
     {
-        ConfigProducerHome.modifyProducerConfig( plugin, strConfigName, nIdConfigProducer, strConfigType, listIdEntry );
+        ConfigProducerHome.modifyProducerConfig( plugin, strConfigName, nIdEntryFileName, nIdConfigProducer,
+            strConfigType, strTextFileName, strTypeConfigFileName, listIdEntry );
     }
 
     /**
@@ -128,5 +136,38 @@ public class ConfigProducerService
     public void copyProducerConfig( Plugin plugin, int nIdConfig, Locale locale )
     {
         ConfigProducerHome.copyProducerConfig( plugin, nIdConfig, locale );
+    }
+
+    /**
+     * This method loads a default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @return id config
+     */
+    public int loadDefaultConfig( Plugin plugin, int nIdDirectory )
+    {
+        return ConfigProducerHome.loadDefaultConfig( plugin, nIdDirectory );
+    }
+
+    /**
+     * This method add default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @param nIdConfig id config
+     */
+    public void createDefaultConfig( Plugin plugin, int nIdDirectory, int nIdConfig )
+    {
+        ConfigProducerHome.createDefaultConfig( plugin, nIdDirectory, nIdConfig );
+    }
+
+    /**
+     * This method update default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @param nIdConfig id config
+     */
+    public void updateDefaultConfig( Plugin plugin, int nIdDirectory, int nIdConfig )
+    {
+        ConfigProducerHome.updateDefaultConfig( plugin, nIdDirectory, nIdConfig );
     }
 }

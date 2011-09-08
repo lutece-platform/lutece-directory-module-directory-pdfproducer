@@ -1,4 +1,8 @@
 <div id="content-box-actions">
+	<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/AdvancedParamaters.jsp">
+    	<input type="hidden" name="id_directory" value="${idDirectory}" />
+      	<input type="submit" value="#i18n{module.directory.pdfproducer.manage.producer.config.button.advanced-parameters}" class="button bt-toolbar" />
+  	</form>
   	<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/CreateConfigProducer.jsp">
     	<input type="hidden" name="id_directory" value="${idDirectory}" />
       	<input type="submit" value="#i18n{module.directory.pdfproducer.manage.producer.config.button.create}" class="button bt-toolbar" />

@@ -53,8 +53,8 @@ public interface IConfigProducerDAO
      * @param strConfigType The type of producer that uses this configuration
      * @param listIdEntry The list of entry id that appear in configuration
      */
-    void addNewConfig( Plugin plugin, String strConfigName, int nIdDirectory, String strConfigType,
-        List<Integer> listIdEntry );
+    void addNewConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdDirectory,
+        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry );
 
     /**
      * This method load a config
@@ -96,8 +96,8 @@ public interface IConfigProducerDAO
      * @param strConfigType config type
      * @param listIdEntry list of id entry
      */
-    void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdConfigProducer, String strConfigType,
-        List<Integer> listIdEntry );
+    void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdConfigProducer,
+        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry );
 
     /**
      * This method copy a config
@@ -127,4 +127,28 @@ public interface IConfigProducerDAO
      * @param plugin plugin
      */
     void addActionsDirectoryRecord( Plugin plugin );
+
+    /**
+     * This method loads a default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @return id config
+     */
+    int loadDefaultConfig( Plugin plugin, int nIdDirectory );
+
+    /**
+     * This method add default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @param nIdConfig id config
+     */
+    void createDefaultConfig( Plugin plugin, int nIdDirectory, int nIdConfig );
+
+    /**
+     * This method update default config
+     * @param plugin plugin
+     * @param nIdDirectory id directory
+     * @param nIdConfig id config
+     */
+    void updateDefaultConfig( Plugin plugin, int nIdDirectory, int nIdConfig );
 }
