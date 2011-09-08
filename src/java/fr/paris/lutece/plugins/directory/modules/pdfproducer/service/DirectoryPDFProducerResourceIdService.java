@@ -58,18 +58,27 @@ public class DirectoryPDFProducerResourceIdService extends ResourceIdService
     public static final String RESOURCE_TYPE = "DIRECTORY_PDFPRODUCER_TYPE";
     private static final String PROPERTY_LABEL_GENERATE_PDF = "module.directory.pdfproducer.permission.label.generate_pdf";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ReferenceList getResourceIdList( Locale locale )
     {
         return DirectoryHome.getDirectoryList( PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitle( String strId, Locale locale )
     {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void register(  )
     {

@@ -226,13 +226,11 @@ public class ConfigProducerDAO implements IConfigProducerDAO
      */
     public void copyProducerConfig( Plugin plugin, int nIdConfig, Locale locale )
     {
-        List<Integer> listIdEntry = new ArrayList<Integer>(  );
-
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CONFIG, plugin );
         daoUtil.setInt( 1, nIdConfig );
         daoUtil.executeQuery(  );
 
-        listIdEntry = loadListConfigEntry( plugin, nIdConfig );
+        List<Integer> listIdEntry = loadListConfigEntry( plugin, nIdConfig );
 
         while ( daoUtil.next(  ) )
         {

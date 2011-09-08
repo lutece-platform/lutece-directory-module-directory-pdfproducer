@@ -49,6 +49,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import fr.paris.lutece.plugins.directory.business.Directory;
 import fr.paris.lutece.plugins.directory.business.DirectoryHome;
 import fr.paris.lutece.plugins.directory.business.EntryFilter;
+import fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation;
 import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.directory.business.RecordField;
@@ -57,13 +58,13 @@ import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.httpaccess.HttpAccess;
-import fr.paris.lutece.util.httpaccess.HttpAccessException;
 import fr.paris.lutece.util.string.StringUtil;
 
 import org.apache.commons.io.IOUtils;
@@ -78,6 +79,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,6 +113,7 @@ public final class PDFUtils
     private static final String PROPERTY_POLICE_NAME = "directory.pdfgenerate.font.name";
     private static final String PROPERTY_IMAGE_URL = "directory.pdfgenerate.image.url";
     private static final String PROPERTY_IMAGE_ALIGN = "directory.pdfgenerate.image.align";
+    private static final String PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME = "module.directory.pdfproducer.message.could_not_fetch_file_name";
     private static final String PARAMETER_ID_DIRECTORY_RECORD = "id_directory_record";
     private static final String PARAMETER_ID_RECORD = "id_record";
 
@@ -263,7 +266,7 @@ public final class PDFUtils
             AppLogService.error( e );
         }
 
-        builderPDFWithEntry( document, plugin, nIdRecord, listEntry, listIdEntryConfig );
+        builderPDFWithEntry( document, plugin, nIdRecord, listEntry, listIdEntryConfig, request.getLocale(  ) );
         document.close(  );
     }
 
@@ -274,10 +277,14 @@ public final class PDFUtils
      * @param nIdRecord id record
      * @param listEntry list of entry
      * @param listIdEntryConfig list of config id entry
+     * @param locale the locale
      */
     private static void builderPDFWithEntry( Document document, Plugin plugin, int nIdRecord, List<IEntry> listEntry,
-        List<Integer> listIdEntryConfig )
+        List<Integer> listIdEntryConfig, Locale locale )
     {
+        Map<String, List<RecordField>> mapIdEntryListRecordField = DirectoryUtils.getMapIdEntryListRecordField( listEntry,
+                nIdRecord, plugin );
+
         for ( IEntry entry : listEntry )
         {
             if ( entry.getEntryType(  ).getGroup(  ) &&
@@ -317,8 +324,8 @@ public final class PDFUtils
                         {
                             try
                             {
-                                builFieldsInPDF( DirectoryUtils.getMapIdEntryListRecordField( listEntry, nIdRecord,
-                                        plugin ), document, child );
+                                builFieldsInPDF( mapIdEntryListRecordField.get( Integer.toString( child.getIdEntry(  ) ) ),
+                                    document, child, locale );
                             }
                             catch ( DocumentException e )
                             {
@@ -335,8 +342,8 @@ public final class PDFUtils
                 {
                     try
                     {
-                        builFieldsInPDF( DirectoryUtils.getMapIdEntryListRecordField( listEntry, nIdRecord, plugin ),
-                            document, entry );
+                        builFieldsInPDF( mapIdEntryListRecordField.get( Integer.toString( entry.getIdEntry(  ) ) ),
+                            document, entry, locale );
                     }
                     catch ( DocumentException e )
                     {
@@ -350,13 +357,14 @@ public final class PDFUtils
     /**
      * This method build the different label and value of directory fields in the document PDF
      *
-     * @param mapListRecordField recordfield map
+     * @param listRecordFields recordfield map
      * @param document document pdf
      * @param entry entry
+     * @param locale the locale
      * @throws DocumentException DocumentException
      */
-    private static void builFieldsInPDF( Map<String, List<RecordField>> mapListRecordField, Document document,
-        IEntry entry ) throws DocumentException
+    private static void builFieldsInPDF( List<RecordField> listRecordFields, Document document, IEntry entry,
+        Locale locale ) throws DocumentException
     {
         Phrase phraseEntry = new Phrase(  );
         Paragraph paragraphEntry = new Paragraph(  );
@@ -376,33 +384,35 @@ public final class PDFUtils
             phraseEntry.add( " : " );
         }
 
-        if ( mapListRecordField.get( String.valueOf( entry.getIdEntry(  ) ) ).size(  ) > 1 )
+        if ( ( listRecordFields != null ) && ( listRecordFields.size(  ) > 0 ) )
         {
-            com.lowagie.text.List listValue = new com.lowagie.text.List( true );
-            listValue.setPreSymbol( "- " );
-            listValue.setNumbered( false );
-            listValue.setIndentationLeft( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                        PROPERTY_POLICE_MARGIN_LEFT_ENTRY_VALUE ) ) );
-
-            Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                            PROPERTY_POLICE_NAME ) ),
-                    DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                            PROPERTY_POLICE_SIZE_ENTRY_VALUE ) ),
-                    DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                            PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
-
-            for ( RecordField recordField : mapListRecordField.get( String.valueOf( entry.getIdEntry(  ) ) ) )
+            if ( ( listRecordFields.size(  ) > 1 ) &&
+                    !( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation ) )
             {
-                listValue.add( new ListItem( recordField.getValue(  ), fontEntryValue ) );
+                com.lowagie.text.List listValue = new com.lowagie.text.List( true );
+                listValue.setPreSymbol( "- " );
+                listValue.setNumbered( false );
+                listValue.setIndentationLeft( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                            PROPERTY_POLICE_MARGIN_LEFT_ENTRY_VALUE ) ) );
+
+                Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                                PROPERTY_POLICE_NAME ) ),
+                        DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                                PROPERTY_POLICE_SIZE_ENTRY_VALUE ) ),
+                        DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                                PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
+
+                for ( RecordField recordField : listRecordFields )
+                {
+                    listValue.add( new ListItem( recordField.getValue(  ), fontEntryValue ) );
+                }
+
+                paragraphEntry.add( phraseEntry );
+                paragraphEntry.add( listValue );
             }
-
-            paragraphEntry.add( phraseEntry );
-            paragraphEntry.add( listValue );
-        }
-        else
-        {
-            for ( RecordField recordField : mapListRecordField.get( String.valueOf( entry.getIdEntry(  ) ) ) )
+            else
             {
+                RecordField recordField = listRecordFields.get( 0 );
                 Chunk chunkEntryValue = null;
                 Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
                                 PROPERTY_POLICE_NAME ) ),
@@ -411,29 +421,41 @@ public final class PDFUtils
                         DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
                                 PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
 
-                if ( StringUtils.isNotBlank( recordField.getValue(  ) ) )
-                {
-                    chunkEntryValue = new Chunk( recordField.getValue(  ), fontEntryValue );
-                }
-
-                if ( recordField.getFile(  ) != null )
-                {
-                    chunkEntryValue = new Chunk( recordField.getFile(  ).getTitle(  ), fontEntryValue );
-                }
-
-                if ( recordField.getEntry(  ) instanceof fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl &&
+                if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl &&
                         ( StringUtils.isNotBlank( recordField.getValue(  ) ) ) )
                 {
                     HttpAccess httpAccess = new HttpAccess(  );
 
                     try
                     {
-                        chunkEntryValue = new Chunk( httpAccess.getFileName( recordField.getValue(  ) ) );
+                        String strFileName = httpAccess.getFileName( recordField.getValue(  ) );
+                        chunkEntryValue = new Chunk( strFileName );
                     }
-                    catch ( HttpAccessException e )
+                    catch ( Exception e )
                     {
                         AppLogService.error( e );
+
+                        String strMessage = I18nService.getLocalizedString( PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME,
+                                locale );
+                        chunkEntryValue = new Chunk( strMessage );
                     }
+                }
+                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation )
+                {
+                    for ( RecordField recordFieldGeo : listRecordFields )
+                    {
+                        if ( ( recordFieldGeo.getField(  ) != null ) &&
+                                EntryTypeGeolocation.CONSTANT_ADDRESS.equals( recordFieldGeo.getField(  ).getTitle(  ) ) )
+                        {
+                            chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordFieldGeo, locale,
+                                        false, false ), fontEntryValue );
+                        }
+                    }
+                }
+                else
+                {
+                    chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordField, locale, false,
+                                false ), fontEntryValue );
                 }
 
                 if ( chunkEntryValue != null )
