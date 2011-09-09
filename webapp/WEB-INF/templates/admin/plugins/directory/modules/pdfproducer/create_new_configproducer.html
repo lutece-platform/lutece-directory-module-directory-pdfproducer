@@ -28,7 +28,7 @@
 				<p id="entry_filename">
 				    <label> &nbsp;</label>
 				    	<INPUT type=radio name="type_config_file_name" value="directory_entry"
-						    	<#if mark_type_config_file_name='directory_entry'>
+						    <#if mark_type_config_file_name?exists && mark_type_config_file_name='directory_entry'>
 								checked="checked"
 							</#if>
 						>
@@ -41,7 +41,7 @@
 			<p>
 				<label> &nbsp;</label>
 				<INPUT type=radio name="type_config_file_name" value="text"
-					<#if mark_type_config_file_name='text'>
+					<#if mark_type_config_file_name?exists && mark_type_config_file_name='text'>
 						checked="checked"
 					</#if>
 				>

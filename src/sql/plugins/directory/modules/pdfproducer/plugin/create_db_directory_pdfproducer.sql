@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS directory_config_producer;
 DROP TABLE IF EXISTS directory_config_entry;
-DROP TABLE IF EXISTS directory_default_config
+DROP TABLE IF EXISTS directory_default_config;
 
 /*==============================================================*/
 /* Table structure for table directory_config_pdf				*/
