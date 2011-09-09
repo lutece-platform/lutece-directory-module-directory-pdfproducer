@@ -56,7 +56,6 @@ import fr.paris.lutece.plugins.directory.business.RecordField;
 import fr.paris.lutece.plugins.directory.business.RecordFieldFilter;
 import fr.paris.lutece.plugins.directory.business.RecordFieldHome;
 import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.IConfigProducer;
 import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
@@ -482,7 +481,9 @@ public final class PDFUtils
      * @param request request
      * @param response response
      * @param plugin plugin
+     * @param configProducer configuration
      * @param listIdEntryConfig list of config id entry
+     * @param locale locale
      */
     public static void doDownloadPDF( HttpServletRequest request, HttpServletResponse response, Plugin plugin,
         IConfigProducer configProducer, List<Integer> listIdEntryConfig, Locale locale )

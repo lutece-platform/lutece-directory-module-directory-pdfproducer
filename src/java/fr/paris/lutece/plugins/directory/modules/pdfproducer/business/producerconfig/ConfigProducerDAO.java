@@ -33,13 +33,13 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-import fr.paris.lutece.portal.service.i18n.I18nService;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.util.sql.DAOUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import fr.paris.lutece.portal.service.i18n.I18nService;
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.util.sql.DAOUtil;
 
 
 /**
@@ -61,10 +61,6 @@ public class ConfigProducerDAO implements IConfigProducerDAO
     private static final String SQL_QUERY_DELETE_BY_DIRECTORY = "DELETE FROM directory_config_producer WHERE id_directory = ? ;";
     private static final String SQL_QUERY_SELECT_ENTRY = "SELECT id_config, id_entry FROM directory_config_entry WHERE id_entry = ? ;";
     private static final String PARAMETER_COPY_NAME = "module.directory.pdfproducer.create.producer.config.copy.name";
-    private static final String SQL_QUERY_CHECK_ACTION_RECORD = "SELECT id_action, name_key, description_key, action_url, icon_url, action_permission, directory_state FROM directory_record_action WHERE action_url = 'jsp/admin/plugins/directory/modules/pdfproducer/action/DoDownloadPDF.jsp' ;";
-    private static final String SQL_QUERY_SELECT_MAX_ACTION_RECORD = "SELECT max(id_action) FROM directory_record_action";
-    private static final String SQL_QUERY_UPDATE_ACTION_RECORD = "INSERT INTO directory_record_action (id_action,name_key,description_key,action_url,icon_url,action_permission,directory_state) VALUES ( ? ,'module.directory.pdfproducer.actions.extractpdf.name','module.directory.pdfproducer.actions.extractpdf.description','jsp/admin/plugins/directory/modules/pdfproducer/action/DoDownloadPDF.jsp','images/admin/skin/plugins/directory/modules/pdfproducer/pdf.png','PDFPRODUCER',0);";
-    private static final String SQL_QUERY_UPDATE_ACTION_RECORD2 = "INSERT INTO directory_record_action (id_action,name_key,description_key,action_url,icon_url,action_permission,directory_state) VALUES ( ? ,'module.directory.pdfproducer.actions.extractpdf.name','module.directory.pdfproducer.actions.extractpdf.description','jsp/admin/plugins/directory/modules/pdfproducer/action/DoDownloadPDF.jsp','images/admin/skin/plugins/directory/modules/pdfproducer/pdf.png','PDFPRODUCER',1);";
     private static final String SQL_QUERY_SELECT_CONFIG_DEFAULT = "SELECT id_config FROM directory_default_config WHERE id_directory = ? ;";
     private static final String SQL_QUERY_SAVE_CONFIG_DEFAULT = "INSERT INTO directory_default_config (id_config, id_directory) VALUES ( ? , ? ) ;";
     private static final String SQL_QUERY_UPDATE_CONFIG_DEFAULT = "UPDATE directory_default_config SET id_config = ? WHERE id_directory = ? ;";
@@ -72,8 +68,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
     /**
     * {@inheritDoc}
     */
-    public void addNewConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdDirectory,
-        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry )
+    public void addNewConfig( Plugin plugin, ConfigProducer configProducer, List<Integer> listIdEntry )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_MAX_ID, plugin );
         daoUtil.executeQuery(  );
@@ -87,12 +82,12 @@ public class ConfigProducerDAO implements IConfigProducerDAO
 
         daoUtil = new DAOUtil( SQL_QUERY_INSERT_CONFIG_PRODUCER, plugin );
         daoUtil.setInt( 1, nIdConfig );
-        daoUtil.setString( 2, strConfigName );
-        daoUtil.setInt( 3, nIdEntryFileName );
-        daoUtil.setInt( 4, nIdDirectory );
-        daoUtil.setString( 5, strConfigType );
-        daoUtil.setString( 6, strTextFileName );
-        daoUtil.setString( 7, strTypeConfigFileName );
+        daoUtil.setString( 2, configProducer.getName(  ) );
+        daoUtil.setInt( 3, configProducer.getIdEntryFileName(  ) );
+        daoUtil.setInt( 4, configProducer.getIdDirectory(  ) );
+        daoUtil.setString( 5, configProducer.getType(  ) );
+        daoUtil.setString( 6, configProducer.getTextFileName(  ) );
+        daoUtil.setString( 7, configProducer.getTypeConfigFileName(  ) );
 
         daoUtil.executeUpdate(  );
 
@@ -207,11 +202,10 @@ public class ConfigProducerDAO implements IConfigProducerDAO
     /**
      * {@inheritDoc}
      */
-    public void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdConfigProducer,
-        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry )
+    public void modifyProducerConfig( Plugin plugin, ConfigProducer configProducer, List<Integer> listIdEntry )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_CONFIG_ENTRY, plugin );
-        daoUtil.setInt( 1, nIdConfigProducer );
+        daoUtil.setInt( 1, configProducer.getIdProducerConfig(  ) );
         daoUtil.executeUpdate(  );
 
         if ( !listIdEntry.isEmpty(  ) )
@@ -219,19 +213,19 @@ public class ConfigProducerDAO implements IConfigProducerDAO
             for ( Integer idEntry : listIdEntry )
             {
                 daoUtil = new DAOUtil( SQL_QUERY_INSERT_CONFIG_ENTRY, plugin );
-                daoUtil.setInt( 1, nIdConfigProducer );
+                daoUtil.setInt( 1, configProducer.getIdProducerConfig(  ) );
                 daoUtil.setInt( 2, idEntry.intValue(  ) );
                 daoUtil.executeUpdate(  );
             }
         }
 
         daoUtil = new DAOUtil( SQL_QUERY_UPDATE_CONFIG_ENTRY, plugin );
-        daoUtil.setString( 1, strConfigName );
-        daoUtil.setInt( 2, nIdEntryFileName );
-        daoUtil.setString( 3, strConfigType );
-        daoUtil.setString( 4, strTextFileName );
-        daoUtil.setString( 5, strTypeConfigFileName );
-        daoUtil.setInt( 6, nIdConfigProducer );
+        daoUtil.setString( 1, configProducer.getName(  ) );
+        daoUtil.setInt( 2, configProducer.getIdEntryFileName(  ) );
+        daoUtil.setString( 3, configProducer.getType(  ) );
+        daoUtil.setString( 4, configProducer.getTextFileName(  ) );
+        daoUtil.setString( 5, configProducer.getTypeConfigFileName(  ) );
+        daoUtil.setInt( 6, configProducer.getIdProducerConfig(  ) );
         daoUtil.executeUpdate(  );
 
         daoUtil.free(  );
@@ -250,10 +244,16 @@ public class ConfigProducerDAO implements IConfigProducerDAO
 
         while ( daoUtil.next(  ) )
         {
-            addNewConfig( plugin,
-                I18nService.getLocalizedString( PARAMETER_COPY_NAME, locale ) + " " + daoUtil.getString( 2 ),
-                daoUtil.getInt( 3 ), daoUtil.getInt( 4 ), daoUtil.getString( 5 ), daoUtil.getString( 6 ),
-                daoUtil.getString( 7 ), listIdEntry );
+            ConfigProducer configProducer = new ConfigProducer(  );
+            configProducer.setName( I18nService.getLocalizedString( PARAMETER_COPY_NAME, locale ) + " " +
+                daoUtil.getString( 2 ) );
+            configProducer.setIdEntryFileName( daoUtil.getInt( 3 ) );
+            configProducer.setIdDirectory( daoUtil.getInt( 4 ) );
+            configProducer.setType( daoUtil.getString( 5 ) );
+            configProducer.setTextFileName( daoUtil.getString( 6 ) );
+            configProducer.setTypeConfigFileName( daoUtil.getString( 7 ) );
+
+            addNewConfig( plugin, configProducer, listIdEntry );
         }
 
         daoUtil.free(  );
@@ -290,42 +290,11 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ENTRY, plugin );
         daoUtil.setInt( 1, nIdEntry );
         daoUtil.executeQuery(  );
-
-        return daoUtil.next(  );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void addActionsDirectoryRecord( Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_ACTION_RECORD, plugin );
-        daoUtil.executeQuery(  );
-
-        if ( !daoUtil.next(  ) )
-        {
-            daoUtil = new DAOUtil( SQL_QUERY_SELECT_MAX_ACTION_RECORD, plugin );
-            daoUtil.executeQuery(  );
-
-            int nId = 1;
-
-            while ( daoUtil.next(  ) )
-            {
-                nId = daoUtil.getInt( 1 ) + 1;
-            }
-
-            daoUtil = new DAOUtil( SQL_QUERY_UPDATE_ACTION_RECORD, plugin );
-            daoUtil.setInt( 1, nId );
-            daoUtil.executeUpdate(  );
-            daoUtil = new DAOUtil( SQL_QUERY_UPDATE_ACTION_RECORD2, plugin );
-            daoUtil.setInt( 1, nId + 1 );
-            daoUtil.executeUpdate(  );
-            daoUtil.free(  );
-        }
-
+        boolean bCheckEntry = daoUtil.next(  );
         daoUtil.free(  );
+        return bCheckEntry;
     }
-
+    
     /**
      * {@inheritDoc}
      */

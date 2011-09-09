@@ -269,10 +269,16 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             {
                 url = new UrlItem( JSP_MANAGE_CONFIG_PRODUCER );
                 url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
-                _manageConfigProducerService.addNewConfig( getPlugin(  ), strNameConfig,
-                    DirectoryUtils.convertStringToInt( strIdEntryFileName ),
-                    DirectoryUtils.convertStringToInt( strIdDirectory ), TYPE_CONFIG_PDF, strTextFileName,
-                    strTypeConfigFileName, listIdEntry );
+
+                ConfigProducer configProducer = new ConfigProducer(  );
+                configProducer.setName( strNameConfig );
+                configProducer.setIdEntryFileName( DirectoryUtils.convertStringToInt( strIdEntryFileName ) );
+                configProducer.setIdDirectory( DirectoryUtils.convertStringToInt( strIdDirectory ) );
+                configProducer.setType( TYPE_CONFIG_PDF );
+                configProducer.setTextFileName( strTextFileName );
+                configProducer.setTypeConfigFileName( strTypeConfigFileName );
+
+                _manageConfigProducerService.addNewConfig( getPlugin(  ), configProducer, listIdEntry );
 
                 return AdminMessageService.getMessageUrl( request, MESSAGE_ADD_NEW_CONFIG, url.getUrl(  ),
                     AdminMessage.TYPE_INFO );
@@ -498,10 +504,17 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
             {
                 url = new UrlItem( JSP_MANAGE_CONFIG_PRODUCER );
                 url.addParameter( PARAMETER_ID_DIRECTORY, strIdDirectory );
-                _manageConfigProducerService.modifyProducerConfig( getPlugin(  ), strNameConfig,
-                    DirectoryUtils.convertStringToInt( strIdEntryFileName ),
-                    DirectoryUtils.convertStringToInt( strIdConfigProducer ), TYPE_CONFIG_PDF, strTextFileName,
-                    strTypeConfigFileName, listIdEntry );
+
+                ConfigProducer configProducer = new ConfigProducer(  );
+                configProducer.setName( strNameConfig );
+                configProducer.setIdProducerConfig( DirectoryUtils.convertStringToInt( strIdConfigProducer ) );
+                configProducer.setIdEntryFileName( DirectoryUtils.convertStringToInt( strIdEntryFileName ) );
+                configProducer.setIdDirectory( DirectoryUtils.convertStringToInt( strIdDirectory ) );
+                configProducer.setType( TYPE_CONFIG_PDF );
+                configProducer.setTextFileName( strTextFileName );
+                configProducer.setTypeConfigFileName( strTypeConfigFileName );
+
+                _manageConfigProducerService.modifyProducerConfig( getPlugin(  ), configProducer, listIdEntry );
             }
 
             return AdminMessageService.getMessageUrl( request, MESSAGE_ADD_NEW_CONFIG, url.getUrl(  ),
@@ -580,10 +593,13 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
     /**
      * Method to check all checkbox
-     * @param strUrlRedirect url to redirect
+     * @param url url to redirect
      * @param strIdDirectory id directory
      * @param listIdEntry list of id Entry
      * @param strNameconfig name of config
+     * @param strIdEntryFileName id entry file name
+     * @param strTextFileName text file name
+     * @param strTypeConfigFileName type of configuration for file name
      * @return final url with params
      */
     private String doCheckAll( UrlItem url, String strIdDirectory, List<Integer> listIdEntry, String strNameconfig,
@@ -690,8 +706,8 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
     /**
      * This method displays the html page to choice the default configuration
-     * @param request
-     * @return
+     * @param request request
+     * @return html page to manage advanced parameters
      */
     public String manageAdvancedParameters( HttpServletRequest request )
     {

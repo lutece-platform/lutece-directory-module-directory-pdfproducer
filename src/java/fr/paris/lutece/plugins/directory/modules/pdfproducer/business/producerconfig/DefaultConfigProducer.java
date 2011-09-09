@@ -44,7 +44,7 @@ import java.util.Locale;
  */
 public class DefaultConfigProducer implements IConfigProducer
 {
-    private static String PROPERTY_DEFAULT_CONFIG_NAME = "module.directory.pdfproducer.create.producer.default.config.name";
+    private static final String PROPERTY_DEFAULT_CONFIG_NAME = "module.directory.pdfproducer.create.producer.default.config.name";
     private static final String DEFAULT_TYPE_FILE_NAME = "default";
     private String _strType;
 
@@ -72,6 +72,7 @@ public class DefaultConfigProducer implements IConfigProducer
     }
 
     /**
+     * @param locale locale
      * @return the _strName
      */
     public String getName( Locale locale )

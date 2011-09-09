@@ -33,3 +33,5 @@ CREATE TABLE directory_default_config (
   id_directory INT DEFAULT NULL,
   PRIMARY KEY  (id_config,id_directory)
   );
+  
+  INSERT INTO directory_record_action (id_action,name_key,description_key,action_url,icon_url,action_permission,directory_state) VALUES ( ? ,'module.directory.pdfproducer.actions.extractpdf.name','module.directory.pdfproducer.actions.extractpdf.description','jsp/admin/plugins/directory/modules/pdfproducer/action/DoDownloadPDF.jsp','images/admin/skin/plugins/directory/modules/pdfproducer/pdf.png','PDFPRODUCER',0)

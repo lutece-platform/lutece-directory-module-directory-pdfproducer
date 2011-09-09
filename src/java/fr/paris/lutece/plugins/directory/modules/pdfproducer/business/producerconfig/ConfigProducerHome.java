@@ -60,18 +60,12 @@ public final class ConfigProducerHome
     /**
      * This method add a new config with different directory entry selected by AdminUser
      * @param plugin The plugin
-     * @param strConfigName The name of configuration
-     * @param nIdDirectory The id of directory
-     * @param strConfigType The type of producer that uses this configuration
-     * @param strTextFileName File name ( if use text )
-     * @param strTypeConfigFileName config type for file name
+     * @param configProducer configuration
      * @param listIdEntry The list of entry id that appear in configuration
      */
-    public static void addNewConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdDirectory,
-        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry )
+    public static void addNewConfig( Plugin plugin, ConfigProducer configProducer, List<Integer> listIdEntry )
     {
-        _dao.addNewConfig( plugin, strConfigName, nIdEntryFileName, nIdDirectory, strConfigType, strTextFileName,
-            strTypeConfigFileName, listIdEntry );
+        _dao.addNewConfig( plugin, configProducer, listIdEntry );
     }
 
     /**
@@ -121,17 +115,12 @@ public final class ConfigProducerHome
     /**
      * This method modify a config
      * @param plugin plugin
-     * @param strConfigName a new name
-     * @param nIdConfigProducer id configproduducer
-     * @param strConfigType config type
+     * @param configProducer configuration
      * @param listIdEntry list of id entry
      */
-    public static void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdEntryFileName,
-        int nIdConfigProducer, String strConfigType, String strTextFileName, String strTypeConfigFileName,
-        List<Integer> listIdEntry )
+    public static void modifyProducerConfig( Plugin plugin, ConfigProducer configProducer, List<Integer> listIdEntry )
     {
-        _dao.modifyProducerConfig( plugin, strConfigName, nIdEntryFileName, nIdConfigProducer, strConfigType,
-            strTextFileName, strTypeConfigFileName, listIdEntry );
+        _dao.modifyProducerConfig( plugin, configProducer, listIdEntry );
     }
 
     /**
@@ -164,15 +153,6 @@ public final class ConfigProducerHome
     public static boolean checkEntry( Plugin plugin, int nIdEntry )
     {
         return _dao.checkEntry( plugin, nIdEntry );
-    }
-
-    /**
-     * This method add new actions for directory record
-     * @param plugin plugin
-     */
-    public static void addActionsDirectoryRecord( Plugin plugin )
-    {
-        _dao.addActionsDirectoryRecord( plugin );
     }
 
     /**

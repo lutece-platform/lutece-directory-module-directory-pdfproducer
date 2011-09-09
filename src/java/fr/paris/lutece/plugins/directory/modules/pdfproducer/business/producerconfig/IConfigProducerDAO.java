@@ -41,20 +41,16 @@ import java.util.Locale;
 
 /**
  * IConfigProducerDAO
- *
  */
 public interface IConfigProducerDAO
 {
     /**
      * This method add a new config with different directory entry selected by AdminUser
      * @param plugin The plugin
-     * @param strConfigName The name of configuration
-     * @param nIdDirectory The id of directory
-     * @param strConfigType The type of producer that uses this configuration
+     * @param configProducer configuration
      * @param listIdEntry The list of entry id that appear in configuration
      */
-    void addNewConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdDirectory,
-        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry );
+    void addNewConfig( Plugin plugin, ConfigProducer configProducer, List<Integer> listIdEntry );
 
     /**
      * This method load a config
@@ -91,13 +87,10 @@ public interface IConfigProducerDAO
     /**
      * This method modify a config
      * @param plugin plugin
-     * @param strConfigName a new name
-     * @param nIdConfigProducer id configproduducer
-     * @param strConfigType config type
+     * @param configProducer configuration
      * @param listIdEntry list of id entry
      */
-    void modifyProducerConfig( Plugin plugin, String strConfigName, int nIdEntryFileName, int nIdConfigProducer,
-        String strConfigType, String strTextFileName, String strTypeConfigFileName, List<Integer> listIdEntry );
+    void modifyProducerConfig( Plugin plugin, ConfigProducer configProducer, List<Integer> listIdEntry );
 
     /**
      * This method copy a config
@@ -121,12 +114,6 @@ public interface IConfigProducerDAO
      * @return true an entry is used by a config otherwise false
      */
     boolean checkEntry( Plugin plugin, int nIdEntry );
-
-    /**
-     * This method add new actions for directory record
-     * @param plugin plugin
-     */
-    void addActionsDirectoryRecord( Plugin plugin );
 
     /**
      * This method loads a default config

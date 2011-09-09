@@ -33,11 +33,14 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.service;
 
+import fr.paris.lutece.plugins.directory.business.DirectoryAction;
+import fr.paris.lutece.plugins.directory.business.DirectoryActionHome;
 import fr.paris.lutece.plugins.directory.business.DirectoryRemovalListenerService;
 import fr.paris.lutece.plugins.directory.business.EntryRemovalListenerService;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.listener.DirectoryPDFProducerRemovalListener;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.listener.EntryPDFProducerRemovalListener;
-import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducerHome;
+import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 
@@ -49,13 +52,22 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 public class DirectoryPDFProducerPlugin extends PluginDefaultImplementation
 {
     public static final String PLUGIN_NAME = "directory-pdfproducer";
-
+    
+    public static final String DIRECTORY_ACTION_NAME_KEY = "module.directory.pdfproducer.actions.extractpdf.name";
+    public static final String DIRECTORY_ACTION_DESCRIPTION = "module.directory.pdfproducer.actions.extractpdf.description";
+    public static final String DIRECTORY_ACTION_URL = "jsp/admin/plugins/directory/modules/pdfproducer/action/DoDownloadPDF.jsp";
+    public static final String DIRECTORY_ACTION_URL_ICON_PDF = "images/admin/skin/plugins/directory/modules/pdfproducer/pdf.png";
+    public static final String DIRECTORY_ACTION_PERMISSION = "PDFPRODUCER";
+    public static final int DIRECTORY_ACTION_STATE_0 = 0 ;
+    public static final int DIRECTORY_ACTION_STATE_1 = 1 ;
+    
     /**
      * {@inheritDoc}
      */
     public void init(  )
     {
-        ConfigProducerHome.addActionsDirectoryRecord( PluginService.getPlugin( PLUGIN_NAME ) );
+        //ConfigProducerHome.addActionsDirectoryRecord( PluginService.getPlugin( PLUGIN_NAME ) );
+    	checkAndAddNewDirectoryRecordAction ( );
 
         DirectoryPDFProducerRemovalListener listenerDirectory = new DirectoryPDFProducerRemovalListener(  );
         EntryPDFProducerRemovalListener listenerEntry = new EntryPDFProducerRemovalListener(  );
@@ -63,4 +75,75 @@ public class DirectoryPDFProducerPlugin extends PluginDefaultImplementation
         DirectoryRemovalListenerService.getService(  ).registerListener( listenerDirectory );
         EntryRemovalListenerService.getService(  ).registerListener( listenerEntry );
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void install()
+    {
+    	super.install();
+    	checkAndAddNewDirectoryRecordAction ( );   	
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void uninstall()
+    {
+    	super.uninstall();
+    	Plugin directoryPlugin = PluginService.getPlugin(DirectoryPlugin.PLUGIN_NAME) ;
+    	
+    	DirectoryAction directoryAction = initAction ( DIRECTORY_ACTION_STATE_0 );
+    	
+    	if  ( DirectoryActionHome.checkActionsDirectoryRecord( directoryAction , directoryPlugin ) )
+    	{
+    		DirectoryActionHome.deleteActionsDirectoryRecord( directoryAction , directoryPlugin );
+    	}
+    	
+    	directoryAction = initAction ( DIRECTORY_ACTION_STATE_1 );
+    	if  ( DirectoryActionHome.checkActionsDirectoryRecord( directoryAction , directoryPlugin ) )
+    	{
+    		DirectoryActionHome.deleteActionsDirectoryRecord( directoryAction , directoryPlugin );
+    	}
+    }
+    
+    /**
+     * This method add new directory record action
+     */
+    private static void checkAndAddNewDirectoryRecordAction ( )
+    {
+    	Plugin directoryPlugin = PluginService.getPlugin(DirectoryPlugin.PLUGIN_NAME) ;
+    	
+    	DirectoryAction directoryAction = initAction ( DIRECTORY_ACTION_STATE_0 );
+    	
+    	if  ( !DirectoryActionHome.checkActionsDirectoryRecord( directoryAction , directoryPlugin ) )
+    	{
+    		DirectoryActionHome.addNewActionInDirectoryRecordAction( directoryAction , directoryPlugin );
+    	}
+    	
+    	directoryAction = initAction ( DIRECTORY_ACTION_STATE_1 );
+    	if  ( !DirectoryActionHome.checkActionsDirectoryRecord( directoryAction , directoryPlugin ) )
+    	{
+    		DirectoryActionHome.addNewActionInDirectoryRecordAction( directoryAction , directoryPlugin );
+    	}
+    }
+    
+    /**
+     * this method create a DirectoryAction
+     * @param nFormState 0 or 1
+     * @return DirectoryAction
+     */
+    private static DirectoryAction initAction ( int nFormState )
+    {
+    	DirectoryAction directoryAction = new DirectoryAction();
+    	directoryAction.setNameKey( DIRECTORY_ACTION_NAME_KEY );
+    	directoryAction.setDescriptionKey( DIRECTORY_ACTION_DESCRIPTION );
+    	directoryAction.setUrl( DIRECTORY_ACTION_URL );
+    	directoryAction.setIconUrl( DIRECTORY_ACTION_URL_ICON_PDF );
+    	directoryAction.setPermission( DIRECTORY_ACTION_PERMISSION );
+    	directoryAction.setFormState( nFormState );
+    	
+    	return directoryAction;
+    }
+    
 }
