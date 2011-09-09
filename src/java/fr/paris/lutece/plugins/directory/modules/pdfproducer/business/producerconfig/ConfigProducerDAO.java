@@ -195,7 +195,8 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_CONFIG_PRODUCER, plugin );
         daoUtil.setInt( 1, nIdConfigProducer );
         daoUtil.executeUpdate(  );
-
+        daoUtil.free(  );
+        
         daoUtil = new DAOUtil( SQL_QUERY_DELETE_CONFIG_ENTRY, plugin );
         daoUtil.setInt( 1, nIdConfigProducer );
         daoUtil.executeUpdate(  );
@@ -211,6 +212,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_CONFIG_ENTRY, plugin );
         daoUtil.setInt( 1, configProducer.getIdProducerConfig(  ) );
         daoUtil.executeUpdate(  );
+        daoUtil.free(  );
 
         if ( !listIdEntry.isEmpty(  ) )
         {
@@ -220,8 +222,10 @@ public class ConfigProducerDAO implements IConfigProducerDAO
                 daoUtil.setInt( 1, configProducer.getIdProducerConfig(  ) );
                 daoUtil.setInt( 2, idEntry.intValue(  ) );
                 daoUtil.executeUpdate(  );
+                daoUtil.free(  );
             }
         }
+        
 
         daoUtil = new DAOUtil( SQL_QUERY_UPDATE_CONFIG_ENTRY, plugin );
         daoUtil.setString( 1, configProducer.getName(  ) );
@@ -279,6 +283,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
             daoUtil2.executeUpdate(  );
             daoUtil2.free(  );
         }
+        daoUtil.free(  );
 
         daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_DIRECTORY, plugin );
         daoUtil.setInt( 1, nIdDirectory );
