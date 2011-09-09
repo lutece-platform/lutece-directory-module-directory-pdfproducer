@@ -79,6 +79,8 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         {
             nIdConfig = daoUtil.getInt( 1 ) + 1;
         }
+        
+        daoUtil.free(  );
 
         daoUtil = new DAOUtil( SQL_QUERY_INSERT_CONFIG_PRODUCER, plugin );
         daoUtil.setInt( 1, nIdConfig );
@@ -90,6 +92,8 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         daoUtil.setString( 7, configProducer.getTypeConfigFileName(  ) );
 
         daoUtil.executeUpdate(  );
+        
+        daoUtil.free(  );
 
         if ( !listIdEntry.isEmpty(  ) )
         {
@@ -99,10 +103,10 @@ public class ConfigProducerDAO implements IConfigProducerDAO
                 daoUtil.setInt( 1, nIdConfig );
                 daoUtil.setInt( 2, idEntry.intValue(  ) );
                 daoUtil.executeUpdate(  );
+                daoUtil.free(  );
             }
         }
 
-        daoUtil.free(  );
     }
 
     /**
