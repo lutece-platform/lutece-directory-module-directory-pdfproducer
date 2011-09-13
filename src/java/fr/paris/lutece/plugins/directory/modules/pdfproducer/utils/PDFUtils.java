@@ -500,7 +500,7 @@ public final class PDFUtils
         if ( strTypeConfigFileName.equals( DEFAULT_TYPE_FILE_NAME ) )
         {
             strName = StringUtil.replaceAccent( directory.getTitle(  ) ).replace( " ", "_" ) + "_" + strIdRecord;
-            strFileName = strName + ".pdf";
+            strFileName = doPurgeNameFile( strName ) + ".pdf";
         }
         else if ( strTypeConfigFileName.equals( DIRECTORY_ENTRY_FILE_NAME ) )
         {
@@ -516,12 +516,12 @@ public final class PDFUtils
                 strName = recordField.getEntry(  ).convertRecordFieldValueToString( recordField, locale, false, false );
             }
 
-            strFileName = strName + ".pdf";
+            strFileName = doPurgeNameFile( strName ) + ".pdf";
         }
         else
         {
             strName = configProducer.getTextFileName(  ) + "_" + strIdRecord;
-            strFileName = strName + ".pdf";
+            strFileName = doPurgeNameFile( strName ) + ".pdf";
         }
 
         response.setHeader( "Content-Disposition", "attachment ;filename=\"" + strFileName + "\"" );
@@ -554,5 +554,15 @@ public final class PDFUtils
         {
             IOUtils.closeQuietly( os );
         }
+    }
+    
+    /**
+     * Method to purge file name, (replace accent and punctuation)
+     * @param strNameFile name file
+     * @return purged name file
+     */
+    public static String doPurgeNameFile( String strNameFile )
+    {
+    	return StringUtil.replaceAccent( strNameFile ).replaceAll( "\\W", "_" );
     }
 }

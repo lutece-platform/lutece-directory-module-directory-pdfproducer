@@ -33,12 +33,22 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 import fr.paris.lutece.plugins.directory.business.EntryHome;
 import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.DefaultConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.ConfigProducerService;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerPlugin;
+import fr.paris.lutece.plugins.directory.modules.pdfproducer.utils.PDFUtils;
 import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
@@ -54,15 +64,6 @@ import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -452,7 +453,12 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
         String strTypeConfigFileName = request.getParameter( PARAMETER_TYPE_CONFIG_FILE_NAME );
         String strTextFileName = request.getParameter( PARAMETER_TEXT_FILE_NAME );
-
+       
+        if ( StringUtils.isNotEmpty( strTextFileName ) )
+        {
+        	strTextFileName = PDFUtils.doPurgeNameFile( strTextFileName ) ;
+        }
+        
         List<Integer> listIdEntry = new ArrayList<Integer>(  );
 
         if ( listStrIdEntry != null )
