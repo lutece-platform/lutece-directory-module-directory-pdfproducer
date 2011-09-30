@@ -42,9 +42,11 @@ import org.apache.commons.lang.StringUtils;
 
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.plugins.directory.web.action.DirectoryAdminSearchFields;
+import fr.paris.lutece.plugins.directory.web.action.IDirectoryAction;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.portal.web.pluginaction.AbstractPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
 import fr.paris.lutece.portal.web.pluginaction.IPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.IPluginActionResult;
@@ -55,7 +57,7 @@ import fr.paris.lutece.util.url.UrlItem;
  * PDFConfigAction
  *
  */
-public class PDFConfigAction implements IPluginAction<DirectoryAdminSearchFields>
+public class PDFConfigAction extends AbstractPluginAction<DirectoryAdminSearchFields> implements IDirectoryAction
 {
     private static final String ACTION_NAME = "Configuration Export PDF/ZIP";
     private static final String TEMPLATE_BUTTON = "modules/pdfproducer/actions/config_producer.html";
