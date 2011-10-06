@@ -55,8 +55,10 @@ public class DirectoryPDFProducerResourceIdService extends ResourceIdService
 {
     /** Permission for generate zip */
     public static final String PERMISSION_GENERATE_PDF = "PDFPRODUCER";
+    public static final String PERMISSION_MANAGE_PDFPRODUCER = "MANAGE_PDFPRODUCER";
     private static final String PROPERTY_LABEL_RESOURCE_TYPE = "directory.permission.label.resource_type_directory";
     private static final String PROPERTY_LABEL_GENERATE_PDF = "module.directory.pdfproducer.permission.label.generate_pdf";
+    private static final String PROPERTY_LABEL_MANAGE_PDFPRODUCER = "module.directory.pdfproducer.permission.label.manage_pdfproducer";
 
     /**
      * {@inheritDoc}
@@ -97,6 +99,11 @@ public class DirectoryPDFProducerResourceIdService extends ResourceIdService
         Permission p = new Permission(  );
         p.setPermissionKey( PERMISSION_GENERATE_PDF );
         p.setPermissionTitleKey( PROPERTY_LABEL_GENERATE_PDF );
+        rt.registerPermission( p );
+
+        p = new Permission(  );
+        p.setPermissionKey( PERMISSION_MANAGE_PDFPRODUCER );
+        p.setPermissionTitleKey( PROPERTY_LABEL_MANAGE_PDFPRODUCER );
         rt.registerPermission( p );
 
         ResourceTypeManager.registerResourceType( rt );

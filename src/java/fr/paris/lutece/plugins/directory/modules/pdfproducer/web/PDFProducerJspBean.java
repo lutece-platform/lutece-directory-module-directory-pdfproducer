@@ -33,24 +33,30 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.web;
 
+import fr.paris.lutece.plugins.directory.business.Directory;
 import fr.paris.lutece.plugins.directory.business.EntryHome;
 import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.DefaultConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.ConfigProducerService;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerPlugin;
+import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerResourceIdService;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.utils.PDFUtils;
 import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
+import fr.paris.lutece.portal.business.rbac.RBAC;
+import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
+import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -138,9 +144,16 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      * Display the page to manage configuration
      * @param request request
      * @return configuration html page
+     * @throws AccessDeniedException exception if the user does not have the permission
      */
     public String manageConfigProducer( HttpServletRequest request )
+        throws AccessDeniedException
     {
+        if ( !isAuthorized(  ) )
+        {
+            throw new AccessDeniedException(  );
+        }
+
         Map<String, Object> model = new HashMap<String, Object>(  );
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
 
@@ -159,9 +172,16 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      * Display the page to create a new configuration
      * @param request request
      * @return create html page
+     * @throws AccessDeniedException exception if the user does not have the permission
      */
     public String createConfigProducer( HttpServletRequest request )
+        throws AccessDeniedException
     {
+        if ( !isAuthorized(  ) )
+        {
+            throw new AccessDeniedException(  );
+        }
+
         Map<String, Object> model = new HashMap<String, Object>(  );
 
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
@@ -214,6 +234,11 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      */
     public String doCreateConfigProducer( HttpServletRequest request )
     {
+        if ( !isAuthorized(  ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strNameConfig = request.getParameter( PARAMETER_CREATECONFIG_NAME );
         String strIdEntryFileName = request.getParameter( PARAMETER_ID_ENTRY_FILE_NAME );
@@ -309,6 +334,11 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      */
     public String deleteConfigProducer( HttpServletRequest request )
     {
+        if ( !isAuthorized(  ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
 
@@ -327,6 +357,11 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      */
     public String doDeleteConfigProducer( HttpServletRequest request )
     {
+        if ( !isAuthorized(  ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
 
@@ -344,9 +379,16 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      * Display the page to modify a configuration
      * @param request request
      * @return modify html page
+     * @throws AccessDeniedException exception if the user does not have the permission
      */
     public String modifyConfigProducer( HttpServletRequest request )
+        throws AccessDeniedException
     {
+        if ( !isAuthorized(  ) )
+        {
+            throw new AccessDeniedException(  );
+        }
+
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strNameConfig = request.getParameter( PARAMETER_CREATECONFIG_NAME );
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
@@ -444,6 +486,11 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      */
     public String doModifyConfigProducer( HttpServletRequest request )
     {
+        if ( !isAuthorized(  ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
         String strCheckPageConfig = request.getParameter( PARAMETER_CHECK_PAGE_CONFIG );
@@ -549,9 +596,16 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      * Copy a configuration
      * @param request request
      * @return manage page
+     * @throws AccessDeniedException exception if the user does not have the permission
      */
     public String doCopyConfigProducer( HttpServletRequest request )
+        throws AccessDeniedException
     {
+        if ( !isAuthorized(  ) )
+        {
+            throw new AccessDeniedException(  );
+        }
+
         String strIdConfigProducer = request.getParameter( PARAMETER_ID_CONFIG_PRODUCER );
         _manageConfigProducerService.copyProducerConfig( getPlugin(  ),
             DirectoryUtils.convertStringToInt( strIdConfigProducer ), request.getLocale(  ) );
@@ -714,9 +768,16 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      * This method displays the html page to choice the default configuration
      * @param request request
      * @return html page to manage advanced parameters
+     * @throws AccessDeniedException exception if the user does not have the permission
      */
     public String manageAdvancedParameters( HttpServletRequest request )
+        throws AccessDeniedException
     {
+        if ( !isAuthorized(  ) )
+        {
+            throw new AccessDeniedException(  );
+        }
+
         Map<String, Object> model = new HashMap<String, Object>(  );
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
 
@@ -766,6 +827,11 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
      */
     public String doSaveAdvancedParameters( HttpServletRequest request )
     {
+        if ( !isAuthorized(  ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_STOP );
+        }
+
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
         String strIdDefaultConfig = request.getParameter( PARAMETER_ID_DEFAULT_CONFIG );
 
@@ -817,5 +883,15 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
         }
 
         return listEntryTypes;
+    }
+
+    /**
+     * Check if the user is authorized (has the permission 'MANAGE_PDFPRODUCER'
+     * @return true if the user has the permission, false otherwise
+     */
+    private boolean isAuthorized(  )
+    {
+        return RBACService.isAuthorized( Directory.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
+            DirectoryPDFProducerResourceIdService.PERMISSION_MANAGE_PDFPRODUCER, getUser(  ) );
     }
 }

@@ -33,8 +33,9 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
+
 /**
- * 
+ *
  * IConfigProducer
  *
  */
