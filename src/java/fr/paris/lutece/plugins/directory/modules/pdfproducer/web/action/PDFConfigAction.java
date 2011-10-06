@@ -33,13 +33,6 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.web.action;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.plugins.directory.web.action.DirectoryAdminSearchFields;
 import fr.paris.lutece.plugins.directory.web.action.IDirectoryAction;
@@ -48,9 +41,15 @@ import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.pluginaction.AbstractPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.DefaultPluginActionResult;
-import fr.paris.lutece.portal.web.pluginaction.IPluginAction;
 import fr.paris.lutece.portal.web.pluginaction.IPluginActionResult;
 import fr.paris.lutece.util.url.UrlItem;
+
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -70,7 +69,7 @@ public class PDFConfigAction extends AbstractPluginAction<DirectoryAdminSearchFi
      */
     public void fillModel( HttpServletRequest request, AdminUser adminUser, Map<String, Object> model )
     {
-       // nothing
+        // nothing
     }
 
     /**
@@ -107,11 +106,10 @@ public class PDFConfigAction extends AbstractPluginAction<DirectoryAdminSearchFi
     /**
      * {@inheritDoc}
      */
-    public IPluginActionResult process( HttpServletRequest request, HttpServletResponse response,
-        AdminUser adminUser, DirectoryAdminSearchFields sessionFields )
-        throws AccessDeniedException
+    public IPluginActionResult process( HttpServletRequest request, HttpServletResponse response, AdminUser adminUser,
+        DirectoryAdminSearchFields sessionFields ) throws AccessDeniedException
     {
-    	IPluginActionResult result = new DefaultPluginActionResult(  );
+        IPluginActionResult result = new DefaultPluginActionResult(  );
 
         String strIdDirectory = request.getParameter( PARAMETER_ID_DIRECTORY );
 

@@ -33,13 +33,13 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -79,7 +79,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         {
             nIdConfig = daoUtil.getInt( 1 ) + 1;
         }
-        
+
         daoUtil.free(  );
 
         daoUtil = new DAOUtil( SQL_QUERY_INSERT_CONFIG_PRODUCER, plugin );
@@ -92,7 +92,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         daoUtil.setString( 7, configProducer.getTypeConfigFileName(  ) );
 
         daoUtil.executeUpdate(  );
-        
+
         daoUtil.free(  );
 
         if ( !listIdEntry.isEmpty(  ) )
@@ -106,7 +106,6 @@ public class ConfigProducerDAO implements IConfigProducerDAO
                 daoUtil.free(  );
             }
         }
-
     }
 
     /**
@@ -196,7 +195,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         daoUtil.setInt( 1, nIdConfigProducer );
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
-        
+
         daoUtil = new DAOUtil( SQL_QUERY_DELETE_CONFIG_ENTRY, plugin );
         daoUtil.setInt( 1, nIdConfigProducer );
         daoUtil.executeUpdate(  );
@@ -225,7 +224,6 @@ public class ConfigProducerDAO implements IConfigProducerDAO
                 daoUtil.free(  );
             }
         }
-        
 
         daoUtil = new DAOUtil( SQL_QUERY_UPDATE_CONFIG_ENTRY, plugin );
         daoUtil.setString( 1, configProducer.getName(  ) );
@@ -283,6 +281,7 @@ public class ConfigProducerDAO implements IConfigProducerDAO
             daoUtil2.executeUpdate(  );
             daoUtil2.free(  );
         }
+
         daoUtil.free(  );
 
         daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_DIRECTORY, plugin );
@@ -299,11 +298,13 @@ public class ConfigProducerDAO implements IConfigProducerDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ENTRY, plugin );
         daoUtil.setInt( 1, nIdEntry );
         daoUtil.executeQuery(  );
+
         boolean bCheckEntry = daoUtil.next(  );
         daoUtil.free(  );
+
         return bCheckEntry;
     }
-    
+
     /**
      * {@inheritDoc}
      */

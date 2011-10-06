@@ -555,7 +555,7 @@ public final class PDFUtils
             IOUtils.closeQuietly( os );
         }
     }
-    
+
     /**
      * Method to purge file name, (replace accent and punctuation)
      * @param strNameFile name file
@@ -563,6 +563,6 @@ public final class PDFUtils
      */
     public static String doPurgeNameFile( String strNameFile )
     {
-    	return StringUtil.replaceAccent( strNameFile ).replaceAll( "\\W", "_" );
+        return StringUtil.replaceAccent( strNameFile ).replaceAll( "\\W", "_" );
     }
 }
