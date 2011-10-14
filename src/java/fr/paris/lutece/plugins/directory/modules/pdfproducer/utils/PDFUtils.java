@@ -459,6 +459,13 @@ public final class PDFUtils
                         }
                     }
                 }
+                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeCheckBox ||
+                        entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeSelect ||
+                        entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeRadioButton )
+                {
+                    chunkEntryValue = new Chunk( entry.convertRecordFieldTitleToString( recordField, locale, false ),
+                            fontEntryValue );
+                }
                 else
                 {
                     chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordField, locale, false,
