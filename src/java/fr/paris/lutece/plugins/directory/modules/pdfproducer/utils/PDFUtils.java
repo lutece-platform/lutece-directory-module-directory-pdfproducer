@@ -466,6 +466,18 @@ public final class PDFUtils
                     chunkEntryValue = new Chunk( entry.convertRecordFieldTitleToString( recordField, locale, false ),
                             fontEntryValue );
                 }
+                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeFile )
+                {
+                    String strFileName = StringUtils.EMPTY;
+
+                    if ( ( recordField.getFile(  ) != null ) &&
+                            StringUtils.isNotBlank( recordField.getFile(  ).getTitle(  ) ) )
+                    {
+                        strFileName = recordField.getFile(  ).getTitle(  );
+                    }
+
+                    chunkEntryValue = new Chunk( strFileName, fontEntryValue );
+                }
                 else
                 {
                     chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordField, locale, false,
