@@ -76,8 +76,8 @@ public class DirectoryPDFJspBean extends PluginAdminPageJspBean
         throws AccessDeniedException
     {
         String strIdDirectoryRecord = request.getParameter( PARAMETER_ID_DIRECTORY_RECORD );
-        Record record = RecordHome.findByPrimaryKey( DirectoryUtils.convertStringToInt( strIdDirectoryRecord ),
-                getPlugin(  ) );
+        int nIdRecord = DirectoryUtils.convertStringToInt( strIdDirectoryRecord );
+        Record record = RecordHome.findByPrimaryKey( nIdRecord, getPlugin(  ) );
 
         if ( ( record == null ) ||
                 !RBACService.isAuthorized( Directory.RESOURCE_TYPE,
@@ -94,13 +94,13 @@ public class DirectoryPDFJspBean extends PluginAdminPageJspBean
         {
             DefaultConfigProducer defaultConfigProducer = new DefaultConfigProducer(  );
             PDFUtils.doDownloadPDF( request, response, getPlugin(  ), defaultConfigProducer,
-                _manageConfigProducerService.loadListConfigEntry( getPlugin(  ), nIdConfig ), getLocale(  ) );
+                _manageConfigProducerService.loadListConfigEntry( getPlugin(  ), nIdConfig ), getLocale(  ), nIdRecord );
         }
         else
         {
             ConfigProducer configProducer = _manageConfigProducerService.loadConfig( getPlugin(  ), nIdConfig );
             PDFUtils.doDownloadPDF( request, response, getPlugin(  ), configProducer,
-                _manageConfigProducerService.loadListConfigEntry( getPlugin(  ), nIdConfig ), getLocale(  ) );
+                _manageConfigProducerService.loadListConfigEntry( getPlugin(  ), nIdConfig ), getLocale(  ), nIdRecord );
         }
     }
 }
