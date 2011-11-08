@@ -61,13 +61,11 @@ import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.directory.utils.DirectoryUtils;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
-import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
-import fr.paris.lutece.util.httpaccess.HttpAccess;
 import fr.paris.lutece.util.string.StringUtil;
 
 import org.apache.commons.io.IOUtils;
@@ -447,23 +445,15 @@ public final class PDFUtils
                         DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
                                 PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
 
-                if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl &&
-                        ( StringUtils.isNotBlank( recordField.getValue(  ) ) ) )
+                if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl )
                 {
-                    HttpAccess httpAccess = new HttpAccess(  );
-
-                    try
+                    if ( StringUtils.isNotBlank( recordField.getFileName(  ) ) )
                     {
-                        String strFileName = httpAccess.getFileName( recordField.getValue(  ) );
-                        chunkEntryValue = new Chunk( strFileName );
+                        chunkEntryValue = new Chunk( recordField.getFileName(  ) );
                     }
-                    catch ( Exception e )
+                    else
                     {
-                        AppLogService.error( e );
-
-                        String strMessage = I18nService.getLocalizedString( PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME,
-                                locale );
-                        chunkEntryValue = new Chunk( strMessage );
+                        chunkEntryValue = new Chunk( StringUtils.EMPTY );
                     }
                 }
                 else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation )
