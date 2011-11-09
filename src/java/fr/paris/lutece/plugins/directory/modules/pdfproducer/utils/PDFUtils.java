@@ -237,8 +237,8 @@ public final class PDFUtils
 
         try
         {
-            image = Image.getInstance( AppPathService.getBaseUrl( request ) +
-                    AppPropertiesService.getProperty( PROPERTY_IMAGE_URL ) );
+            image = Image.getInstance( AppPathService.getAbsolutePathFromRelativePath( AppPropertiesService.getProperty( 
+                            PROPERTY_IMAGE_URL ) ) );
             image.setAlignment( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
                         PROPERTY_IMAGE_ALIGN ) ) );
 
