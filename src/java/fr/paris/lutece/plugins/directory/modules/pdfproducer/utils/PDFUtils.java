@@ -114,7 +114,7 @@ public final class PDFUtils
     private static final String PROPERTY_POLICE_NAME = "directory.pdfgenerate.font.name";
     private static final String PROPERTY_IMAGE_URL = "directory.pdfgenerate.image.url";
     private static final String PROPERTY_IMAGE_ALIGN = "directory.pdfgenerate.image.align";
-    private static final String PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME = "module.directory.pdfproducer.message.could_not_fetch_file_name";
+    //private static final String PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME = "module.directory.pdfproducer.message.could_not_fetch_file_name";
     private static final String PARAMETER_ID_DIRECTORY_RECORD = "id_directory_record";
     private static final String PARAMETER_ID_RECORD = "id_record";
 
@@ -475,7 +475,8 @@ public final class PDFUtils
                     chunkEntryValue = new Chunk( entry.convertRecordFieldTitleToString( recordField, locale, false ),
                             fontEntryValue );
                 }
-                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeFile )
+                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeFile ||
+                        entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeImg )
                 {
                     String strFileName = StringUtils.EMPTY;
 
