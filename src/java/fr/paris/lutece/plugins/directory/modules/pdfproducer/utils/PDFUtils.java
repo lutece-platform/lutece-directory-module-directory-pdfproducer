@@ -49,6 +49,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import fr.paris.lutece.plugins.directory.business.Directory;
 import fr.paris.lutece.plugins.directory.business.DirectoryHome;
 import fr.paris.lutece.plugins.directory.business.EntryFilter;
+import fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl;
 import fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation;
 import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.business.Record;
@@ -92,7 +93,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class PDFUtils
 {
-    // properties PDF configuration
+    // PROPERTIES
     private static final String PROPERTY_POLICE_FORMAT_DATE = "directory.pdfgenerate.format.date";
     private static final String PROPERTY_POLICE_SIZE_DATE = "directory.pdfgenerate.font.size.date";
     private static final String PROPERTY_POLICE_STYLE_DATE = "directory.pdfgenerate.font.style.date";
@@ -114,11 +115,16 @@ public final class PDFUtils
     private static final String PROPERTY_POLICE_NAME = "directory.pdfgenerate.font.name";
     private static final String PROPERTY_IMAGE_URL = "directory.pdfgenerate.image.url";
     private static final String PROPERTY_IMAGE_ALIGN = "directory.pdfgenerate.image.align";
+
     //private static final String PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME = "module.directory.pdfproducer.message.could_not_fetch_file_name";
     private static final String PARAMETER_ID_DIRECTORY_RECORD = "id_directory_record";
     private static final String PARAMETER_ID_RECORD = "id_record";
 
-    //constant
+    // FIELDS
+    private static final String FIELD_THUMBNAIL = "little_thumbnail";
+    private static final String FIELD_BIG_THUMBNAIL = "big_thumbnail";
+
+    // CONSTANTS
     private static final String DEFAULT_TYPE_FILE_NAME = "default";
     private static final String DIRECTORY_ENTRY_FILE_NAME = "directory_entry";
 
@@ -410,99 +416,157 @@ public final class PDFUtils
 
         if ( ( listRecordFields != null ) && ( listRecordFields.size(  ) > 0 ) )
         {
+            // Must separate the behaviour whether the list of record fiels contains 1 or more record fields
             if ( ( listRecordFields.size(  ) > 1 ) &&
                     !( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation ) )
             {
-                com.lowagie.text.List listValue = new com.lowagie.text.List( true );
-                listValue.setPreSymbol( "- " );
-                listValue.setNumbered( false );
-                listValue.setIndentationLeft( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                            PROPERTY_POLICE_MARGIN_LEFT_ENTRY_VALUE ) ) );
-
-                Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                                PROPERTY_POLICE_NAME ) ),
-                        DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                                PROPERTY_POLICE_SIZE_ENTRY_VALUE ) ),
-                        DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                                PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
-
-                for ( RecordField recordField : listRecordFields )
-                {
-                    listValue.add( new ListItem( recordField.getValue(  ), fontEntryValue ) );
-                }
-
-                paragraphEntry.add( phraseEntry );
-                paragraphEntry.add( listValue );
+                builFieldsInParagraph( listRecordFields, entry, locale, phraseEntry, paragraphEntry );
             }
             else
             {
-                RecordField recordField = listRecordFields.get( 0 );
-                Chunk chunkEntryValue = null;
-                Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                                PROPERTY_POLICE_NAME ) ),
-                        DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                                PROPERTY_POLICE_SIZE_ENTRY_VALUE ) ),
-                        DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
-                                PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
-
-                if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl )
-                {
-                    if ( StringUtils.isNotBlank( recordField.getFileName(  ) ) )
-                    {
-                        chunkEntryValue = new Chunk( recordField.getFileName(  ) );
-                    }
-                    else
-                    {
-                        chunkEntryValue = new Chunk( StringUtils.EMPTY );
-                    }
-                }
-                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation )
-                {
-                    for ( RecordField recordFieldGeo : listRecordFields )
-                    {
-                        if ( ( recordFieldGeo.getField(  ) != null ) &&
-                                EntryTypeGeolocation.CONSTANT_ADDRESS.equals( recordFieldGeo.getField(  ).getTitle(  ) ) )
-                        {
-                            chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordFieldGeo, locale,
-                                        false, false ), fontEntryValue );
-                        }
-                    }
-                }
-                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeCheckBox ||
-                        entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeSelect ||
-                        entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeRadioButton )
-                {
-                    chunkEntryValue = new Chunk( entry.convertRecordFieldTitleToString( recordField, locale, false ),
-                            fontEntryValue );
-                }
-                else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeFile ||
-                        entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeImg )
-                {
-                    String strFileName = StringUtils.EMPTY;
-
-                    if ( ( recordField.getFile(  ) != null ) &&
-                            StringUtils.isNotBlank( recordField.getFile(  ).getTitle(  ) ) )
-                    {
-                        strFileName = recordField.getFile(  ).getTitle(  );
-                    }
-
-                    chunkEntryValue = new Chunk( strFileName, fontEntryValue );
-                }
-                else
-                {
-                    chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordField, locale, false,
-                                false ), fontEntryValue );
-                }
-
-                if ( chunkEntryValue != null )
-                {
-                    phraseEntry.add( chunkEntryValue );
-                    paragraphEntry.add( phraseEntry );
-                }
+                builFieldsInSinglePhrase( listRecordFields, entry, locale, phraseEntry, paragraphEntry );
             }
         }
 
         document.add( paragraphEntry );
+    }
+
+    /**
+     * Build the fields in a whole paragraph.
+     * @param listRecordFields the list of record fields
+     * @param entry the entry
+     * @param locale the locale
+     * @param phraseEntry the phrase entry
+     * @param paragraphEntry the paragraph entry
+     * @throws DocumentException exception if there is an error
+     */
+    private static void builFieldsInParagraph( List<RecordField> listRecordFields, IEntry entry, Locale locale,
+        Phrase phraseEntry, Paragraph paragraphEntry )
+        throws DocumentException
+    {
+        com.lowagie.text.List listValue = new com.lowagie.text.List( true );
+        listValue.setPreSymbol( "- " );
+        listValue.setNumbered( false );
+        listValue.setIndentationLeft( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                    PROPERTY_POLICE_MARGIN_LEFT_ENTRY_VALUE ) ) );
+
+        Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                        PROPERTY_POLICE_NAME ) ),
+                DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_SIZE_ENTRY_VALUE ) ),
+                DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
+
+        for ( RecordField recordField : listRecordFields )
+        {
+            String strValue = StringUtils.EMPTY;
+
+            if ( entry instanceof EntryTypeDownloadUrl && StringUtils.isNotBlank( recordField.getFileName(  ) ) )
+            {
+                strValue = recordField.getFileName(  );
+            }
+            else if ( ( recordField.getFile(  ) != null ) &&
+                    StringUtils.isNotBlank( recordField.getFile(  ).getTitle(  ) ) )
+            {
+                // The thumbnails and big thumbnails should not be displayed
+                if ( !( ( StringUtils.isNotBlank( recordField.getValue(  ) ) &&
+                        recordField.getValue(  ).startsWith( FIELD_THUMBNAIL ) ) ||
+                        ( StringUtils.isNotBlank( recordField.getValue(  ) ) &&
+                        recordField.getValue(  ).startsWith( FIELD_BIG_THUMBNAIL ) ) ) )
+                {
+                    strValue = recordField.getFile(  ).getTitle(  );
+                }
+            }
+            else
+            {
+                strValue = entry.convertRecordFieldValueToString( recordField, locale, false, false );
+            }
+
+            listValue.add( new ListItem( strValue, fontEntryValue ) );
+        }
+
+        paragraphEntry.add( phraseEntry );
+        paragraphEntry.add( listValue );
+    }
+
+    /**
+     * Build the fields in a single paragraph.
+     * @param listRecordFields the list of record fields
+     * @param entry the entry
+     * @param locale the locale
+     * @param phraseEntry the phrase entry
+     * @param paragraphEntry the paragraph entry
+     * @throws DocumentException exception if there is an error
+     */
+    private static void builFieldsInSinglePhrase( List<RecordField> listRecordFields, IEntry entry, Locale locale,
+        Phrase phraseEntry, Paragraph paragraphEntry )
+        throws DocumentException
+    {
+        RecordField recordField = listRecordFields.get( 0 );
+        Chunk chunkEntryValue = null;
+        Font fontEntryValue = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( 
+                        PROPERTY_POLICE_NAME ) ),
+                DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_SIZE_ENTRY_VALUE ) ),
+                DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_STYLE_ENTRY_VALUE ) ) );
+
+        if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeDownloadUrl )
+        {
+            if ( StringUtils.isNotBlank( recordField.getFileName(  ) ) )
+            {
+                chunkEntryValue = new Chunk( recordField.getFileName(  ) );
+            }
+            else
+            {
+                chunkEntryValue = new Chunk( StringUtils.EMPTY );
+            }
+        }
+        else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation )
+        {
+            for ( RecordField recordFieldGeo : listRecordFields )
+            {
+                if ( ( recordFieldGeo.getField(  ) != null ) &&
+                        EntryTypeGeolocation.CONSTANT_ADDRESS.equals( recordFieldGeo.getField(  ).getTitle(  ) ) )
+                {
+                    chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordFieldGeo, locale, false,
+                                false ), fontEntryValue );
+                }
+            }
+        }
+        else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeCheckBox ||
+                entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeSelect ||
+                entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeRadioButton )
+        {
+            chunkEntryValue = new Chunk( entry.convertRecordFieldTitleToString( recordField, locale, false ),
+                    fontEntryValue );
+        }
+        else if ( entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeFile ||
+                entry instanceof fr.paris.lutece.plugins.directory.business.EntryTypeImg )
+        {
+            String strFileName = StringUtils.EMPTY;
+
+            if ( ( recordField.getFile(  ) != null ) && StringUtils.isNotBlank( recordField.getFile(  ).getTitle(  ) ) )
+            {
+                // The thumbnails and big thumbnails should not be displayed
+                if ( !( ( StringUtils.isNotBlank( recordField.getValue(  ) ) &&
+                        recordField.getValue(  ).startsWith( FIELD_THUMBNAIL ) ) ||
+                        ( StringUtils.isNotBlank( recordField.getValue(  ) ) &&
+                        recordField.getValue(  ).startsWith( FIELD_BIG_THUMBNAIL ) ) ) )
+                {
+                    strFileName = recordField.getFile(  ).getTitle(  );
+                }
+            }
+
+            chunkEntryValue = new Chunk( strFileName, fontEntryValue );
+        }
+        else
+        {
+            chunkEntryValue = new Chunk( entry.convertRecordFieldValueToString( recordField, locale, false, false ),
+                    fontEntryValue );
+        }
+
+        if ( chunkEntryValue != null )
+        {
+            phraseEntry.add( chunkEntryValue );
+            paragraphEntry.add( phraseEntry );
+        }
     }
 
     /**
