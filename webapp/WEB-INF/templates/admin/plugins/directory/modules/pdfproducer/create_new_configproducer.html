@@ -17,38 +17,38 @@
 			
 			<p>
 				<label> #i18n{module.directory.pdfproducer.create.producer.config.namefile} * :</label>
-				<INPUT type=radio name="type_config_file_name" value="default" 
+				<input type=radio name="type_config_file_name" value="default" 
 					<#if !mark_type_config_file_name?exists || mark_type_config_file_name='default'>
 						checked="checked"
 					</#if>				
-				>
+				/>
 				#i18n{module.directory.pdfproducer.create.producer.config.namefile-default}
 			</p>
 			<#if list_entries_filename?exists && list_entries_filename?has_content >
 				<p id="entry_filename">
 				    <label> &nbsp;</label>
-				    	<INPUT type=radio name="type_config_file_name" value="directory_entry"
+				    	<input type=radio name="type_config_file_name" value="directory_entry"
 						    <#if mark_type_config_file_name?exists && mark_type_config_file_name='directory_entry'>
 								checked="checked"
 							</#if>
-						>
+						/>
 				    	#i18n{module.directory.pdfproducer.create.producer.config.namefile-field} :
-				    	</br>
+				    	<br />
 						<label> &nbsp;</label>
 						<@combo name="id_entry_filename" items=list_entries_filename default_value=defaut_entry_directory_filename />
 				</p>
 			</#if>
 			<p>
 				<label> &nbsp;</label>
-				<INPUT type=radio name="type_config_file_name" value="text"
+				<input type=radio name="type_config_file_name" value="text"
 					<#if mark_type_config_file_name?exists && mark_type_config_file_name='text'>
 						checked="checked"
 					</#if>
-				>
+				/>
 				#i18n{module.directory.pdfproducer.create.producer.config.namefile-text} :
-				</br>
+				<br />
 				<label> &nbsp;</label>
-				<input type="text" maxlength="255" value="<#if mark_text_file_name?exists>${mark_text_file_name}</#if>" size="80" id="" name="text_file_name">
+				<input type="text" maxlength="255" value="<#if mark_text_file_name?exists>${mark_text_file_name}</#if>" size="80" id="" name="text_file_name" />
 			</p>
 			<table width="100%">
 				<tr> 
@@ -76,9 +76,9 @@
 				           		</#if>
 				           		</td>
 				           		<td>
-				           			<input type="hidden" name="config_entry" value="${entry.idEntry}">
+				           			<input type="hidden" name="config_entry" value="${entry.idEntry}" />
 				           		</td>
-							<#else>
+							<#elseif !entry.entryType.comment>
 								<td>
 									${entry.title}				
 								</td>
@@ -89,16 +89,16 @@
 				           		</td>
 				           		<td>
 				           			<#if id_entry_list?has_content && id_entry_list?seq_contains(entry.idEntry?string)>
-										<input type="checkbox" name="config_entry" value="${entry.idEntry}" checked>
+										<input type="checkbox" name="config_entry" value="${entry.idEntry}" checked="checked" />
 									<#else>
-										<input type="checkbox" name="config_entry" value="${entry.idEntry}">
+										<input type="checkbox" name="config_entry" value="${entry.idEntry}" />
 									</#if>
 									
 				           		</td>
 							</#if>
 						</tr>
 						<#if entry.children?exists>
-							<#list entry.children as entry_child>	
+							<#list entry.children as entry_child>
 								<tr>						
 									<td class="cell-indent">
 					               		<#if entry_child.entryType.comment>
@@ -114,21 +114,21 @@
 					           		</td>
 					           		<td>
 					           			<#if id_entry_list?has_content && id_entry_list?seq_contains(entry_child.idEntry?string)>
-											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" checked>
+											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" checked="checked" />
 										<#else>
-											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}">
+											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" />
 										</#if>
 					           		</td>
 				               	</tr>
 				            </#list>
-			            </#if>		
+			            </#if>
 					</#list>
-				</#if>		  
+				</#if>
 			</table> 
 			<p>
-				<input class="button" type="submit" name="save" value="#i18n{module.directory.pdfproducer.create.producer.config.button.create}">
-				<input class="button" type="submit" name="cancel" value="#i18n{module.directory.pdfproducer.create.producer.config.button.cancel}">		
-				<input class="button" type="submit" name="allchecked" value="#i18n{module.directory.pdfproducer.create.producer.config.button.allchecked}">
+				<input class="button" type="submit" name="save" value="#i18n{module.directory.pdfproducer.create.producer.config.button.create}" />
+				<input class="button" type="submit" name="cancel" value="#i18n{module.directory.pdfproducer.create.producer.config.button.cancel}" />		
+				<input class="button" type="submit" name="allchecked" value="#i18n{module.directory.pdfproducer.create.producer.config.button.allchecked}" />
 			</p>	
 		</form>	
 	</div>
