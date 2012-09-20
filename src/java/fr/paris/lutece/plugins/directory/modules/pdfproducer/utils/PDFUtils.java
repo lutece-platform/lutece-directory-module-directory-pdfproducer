@@ -56,6 +56,7 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.string.StringUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -65,6 +66,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -112,6 +114,8 @@ public final class PDFUtils
 	private static final String PROPERTY_POLICE_NAME = "directory.pdfgenerate.font.name";
 	private static final String PROPERTY_IMAGE_URL = "directory.pdfgenerate.image.url";
 	private static final String PROPERTY_IMAGE_ALIGN = "directory.pdfgenerate.image.align";
+    private static final String PROPERTY_IMAGE_FITWIDTH = "directory.pdfgenerate.image.fitWidth";
+    private static final String PROPERTY_IMAGE_FITHEIGHT = "directory.pdfgenerate.image.fitHeight";
 
 	// private static final String PROPERTY_MESSAGE_COULD_NOT_FETCH_FILE_NAME = "module.directory.pdfproducer.message.could_not_fetch_file_name";
 	private static final String PARAMETER_ID_DIRECTORY_RECORD = "id_directory_record";
@@ -231,8 +235,27 @@ public final class PDFUtils
 
 		try
 		{
-			image = Image.getInstance( AppPathService.getAbsolutePathFromRelativePath( AppPropertiesService.getProperty( PROPERTY_IMAGE_URL ) ) );
-			image.setAlignment( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_IMAGE_ALIGN ) ) );
+
+            image = Image.getInstance( ImageIO.read( new File( AppPathService
+                    .getAbsolutePathFromRelativePath( AppPropertiesService.getProperty( PROPERTY_IMAGE_URL ) ) ) ),
+                    null );
+            image.setAlignment( DirectoryUtils.convertStringToInt( AppPropertiesService
+                    .getProperty( PROPERTY_IMAGE_ALIGN ) ) );
+            float fitWidth;
+            float fitHeight;
+
+            try
+            {
+                fitWidth = Float.parseFloat( AppPropertiesService.getProperty( PROPERTY_IMAGE_FITWIDTH ) );
+                fitHeight = Float.parseFloat( AppPropertiesService.getProperty( PROPERTY_IMAGE_FITHEIGHT ) );
+            }
+            catch ( NumberFormatException e )
+            {
+                fitWidth = 100f;
+                fitHeight = 100f;
+            }
+
+            image.scaleToFit( fitWidth, fitHeight );
 
 			try
 			{
