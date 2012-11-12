@@ -61,14 +61,14 @@ import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -135,6 +135,7 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
     //Constant
     private static final String DEFAULT_VALUE = "-1";
+    private static final String CONSTANT_DIRECTORY_ENTRY = "directory_entry";
     private static final String COMMA = ",";
 
     // Type Config
@@ -285,7 +286,9 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
                 return AdminMessageService.getMessageUrl( request, MESSAGE_NAME_CONFIG_MISSED, url.getUrl(  ),
                     AdminMessage.TYPE_ERROR );
             }
-            else if ( StringUtils.isBlank( strIdEntryFileName ) && strIdEntryFileName.equals( DEFAULT_VALUE ) )
+            else if ( StringUtils.isBlank( strIdEntryFileName )
+                    && ( StringUtils.isEmpty( strTypeConfigFileName ) || strTypeConfigFileName
+                            .equals( CONSTANT_DIRECTORY_ENTRY ) ) )
             {
                 url.addParameter( PARAMETER_CREATECONFIG_NAME, strIdEntryFileName );
 
