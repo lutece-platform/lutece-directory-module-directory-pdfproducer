@@ -182,59 +182,98 @@ public final class PDFUtils
 	 */
 	public static void doCreateDocumentPDF( HttpServletRequest request, String strNameFile, OutputStream out, int nIdRecord, List<Integer> listIdEntryConfig )
 	{
-		Document document = new Document( PageSize.A4 );
-
-		Plugin plugin = PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME );
 		AdminUser adminUser = AdminUserService.getAdminUser( request );
+        Locale locale = request.getLocale( );
+        doCreateDocumentPDF( adminUser, locale, strNameFile, out, nIdRecord, listIdEntryConfig );
+	}
 
-		EntryFilter filter;
+    // Section added to be used without the request, juste with the adminUser and the locale
 
-		Record record = RecordHome.findByPrimaryKey( nIdRecord, plugin );
+    /**
+     * method to create PDF without config
+     * @param adminUser The admin user
+     * @param locale The locale
+     * @param strNameFile PDF name
+     * @param out OutputStream
+     * @param nIdRecord the id record
+     */
+    public static void doCreateDocumentPDF( AdminUser adminUser, Locale locale, String strNameFile, OutputStream out,
+            int nIdRecord )
+    {
+        List<Integer> listIdEntryConfig = new ArrayList<Integer>( );
+        doCreateDocumentPDF( adminUser, locale, strNameFile, out, nIdRecord, listIdEntryConfig );
+    }
 
-		filter = new EntryFilter( );
-		filter.setIdDirectory( record.getDirectory( ).getIdDirectory( ) );
-		filter.setIsGroup( EntryFilter.FILTER_TRUE );
+    /**
+     * method to create PDF
+     * @param adminUser The admin user
+     * @param locale The locale
+     * @param strNameFile PDF name
+     * @param out OutputStream
+     * @param nIdRecord the id record
+     * @param listIdEntryConfig list of config id entry
+     */
+    public static void doCreateDocumentPDF( AdminUser adminUser, Locale locale, String strNameFile, OutputStream out,
+            int nIdRecord, List<Integer> listIdEntryConfig )
+    {
+        Document document = new Document( PageSize.A4 );
 
-		List<IEntry> listEntry = DirectoryUtils.getFormEntries( record.getDirectory( ).getIdDirectory( ), plugin, adminUser );
-		int nIdDirectory = record.getDirectory( ).getIdDirectory( );
-		Directory directory = DirectoryHome.findByPrimaryKey( nIdDirectory, plugin );
+        Plugin plugin = PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME );
 
-		try
-		{
-			PdfWriter.getInstance( document, out );
-		}
-		catch ( DocumentException e )
-		{
-			AppLogService.error( e );
-		}
+        EntryFilter filter;
 
-		document.open( );
+        Record record = RecordHome.findByPrimaryKey( nIdRecord, plugin );
 
-		if ( record.getDateCreation( ) != null )
-		{
-			SimpleDateFormat monthDayYearformatter = new SimpleDateFormat( AppPropertiesService.getProperty( PROPERTY_POLICE_FORMAT_DATE ) );
+        filter = new EntryFilter( );
+        filter.setIdDirectory( record.getDirectory( ).getIdDirectory( ) );
+        filter.setIsGroup( EntryFilter.FILTER_TRUE );
 
-			Font fontDate = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_NAME ) ), DirectoryUtils.convertStringToInt( AppPropertiesService
-					.getProperty( PROPERTY_POLICE_SIZE_DATE ) ), DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_STYLE_DATE ) ) );
+        List<IEntry> listEntry = DirectoryUtils.getFormEntries( record.getDirectory( ).getIdDirectory( ), plugin,
+                adminUser );
+        int nIdDirectory = record.getDirectory( ).getIdDirectory( );
+        Directory directory = DirectoryHome.findByPrimaryKey( nIdDirectory, plugin );
 
-			Paragraph paragraphDate = new Paragraph( new Phrase( monthDayYearformatter.format( record.getDateCreation( ) ).toString( ), fontDate ) );
+        try
+        {
+            PdfWriter.getInstance( document, out );
+        }
+        catch ( DocumentException e )
+        {
+            AppLogService.error( e );
+        }
 
-			paragraphDate.setAlignment( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_ALIGN_DATE ) ) );
+        document.open( );
 
-			try
-			{
-				document.add( paragraphDate );
-			}
-			catch ( DocumentException e )
-			{
-				AppLogService.error( e );
-			}
-		}
+        if ( record.getDateCreation( ) != null )
+        {
+            SimpleDateFormat monthDayYearformatter = new SimpleDateFormat(
+                    AppPropertiesService.getProperty( PROPERTY_POLICE_FORMAT_DATE ) );
 
-		Image image;
+            Font fontDate = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService
+                    .getProperty( PROPERTY_POLICE_NAME ) ), DirectoryUtils.convertStringToInt( AppPropertiesService
+                    .getProperty( PROPERTY_POLICE_SIZE_DATE ) ),
+                    DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_STYLE_DATE ) ) );
 
-		try
-		{
+            Paragraph paragraphDate = new Paragraph( new Phrase( monthDayYearformatter
+                    .format( record.getDateCreation( ) ).toString( ), fontDate ) );
+
+            paragraphDate.setAlignment( DirectoryUtils.convertStringToInt( AppPropertiesService
+                    .getProperty( PROPERTY_POLICE_ALIGN_DATE ) ) );
+
+            try
+            {
+                document.add( paragraphDate );
+            }
+            catch ( DocumentException e )
+            {
+                AppLogService.error( e );
+            }
+        }
+
+        Image image;
+
+        try
+        {
 
             image = Image.getInstance( ImageIO.read( new File( AppPathService
                     .getAbsolutePathFromRelativePath( AppPropertiesService.getProperty( PROPERTY_IMAGE_URL ) ) ) ),
@@ -257,51 +296,56 @@ public final class PDFUtils
 
             image.scaleToFit( fitWidth, fitHeight );
 
-			try
-			{
-				document.add( image );
-			}
-			catch ( DocumentException e )
-			{
-				AppLogService.error( e );
-			}
-		}
-		catch ( BadElementException e )
-		{
-			AppLogService.error( e );
-		}
-		catch ( MalformedURLException e )
-		{
-			AppLogService.error( e );
-		}
-		catch ( IOException e )
-		{
-			AppLogService.error( e );
-		}
+            try
+            {
+                document.add( image );
+            }
+            catch ( DocumentException e )
+            {
+                AppLogService.error( e );
+            }
+        }
+        catch ( BadElementException e )
+        {
+            AppLogService.error( e );
+        }
+        catch ( MalformedURLException e )
+        {
+            AppLogService.error( e );
+        }
+        catch ( IOException e )
+        {
+            AppLogService.error( e );
+        }
 
-		directory.getTitle( );
+        directory.getTitle( );
 
-		Font fontTitle = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_NAME ) ), DirectoryUtils.convertStringToInt( AppPropertiesService
-				.getProperty( PROPERTY_POLICE_SIZE_TITLE_DIRECTORY ) ), DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_STYLE_TITLE_DIRECTORY ) ) );
-		fontTitle.isUnderlined( );
+        Font fontTitle = new Font( DirectoryUtils.convertStringToInt( AppPropertiesService
+                .getProperty( PROPERTY_POLICE_NAME ) ), DirectoryUtils.convertStringToInt( AppPropertiesService
+                .getProperty( PROPERTY_POLICE_SIZE_TITLE_DIRECTORY ) ),
+                DirectoryUtils.convertStringToInt( AppPropertiesService
+                        .getProperty( PROPERTY_POLICE_STYLE_TITLE_DIRECTORY ) ) );
+        fontTitle.isUnderlined( );
 
-		Paragraph paragraphHeader = new Paragraph( new Phrase( directory.getTitle( ), fontTitle ) );
-		paragraphHeader.setAlignment( Element.ALIGN_CENTER );
-		paragraphHeader.setSpacingBefore( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_SPACING_BEFORE_TITLE_DIRECTORY ) ) );
-		paragraphHeader.setSpacingAfter( DirectoryUtils.convertStringToInt( AppPropertiesService.getProperty( PROPERTY_POLICE_SPACING_AFTER_TITLE_DIRECTORY ) ) );
+        Paragraph paragraphHeader = new Paragraph( new Phrase( directory.getTitle( ), fontTitle ) );
+        paragraphHeader.setAlignment( Element.ALIGN_CENTER );
+        paragraphHeader.setSpacingBefore( DirectoryUtils.convertStringToInt( AppPropertiesService
+                .getProperty( PROPERTY_POLICE_SPACING_BEFORE_TITLE_DIRECTORY ) ) );
+        paragraphHeader.setSpacingAfter( DirectoryUtils.convertStringToInt( AppPropertiesService
+                .getProperty( PROPERTY_POLICE_SPACING_AFTER_TITLE_DIRECTORY ) ) );
 
-		try
-		{
-			document.add( paragraphHeader );
-		}
-		catch ( DocumentException e )
-		{
-			AppLogService.error( e );
-		}
+        try
+        {
+            document.add( paragraphHeader );
+        }
+        catch ( DocumentException e )
+        {
+            AppLogService.error( e );
+        }
 
-		builderPDFWithEntry( document, plugin, nIdRecord, listEntry, listIdEntryConfig, request.getLocale( ) );
-		document.close( );
-	}
+        builderPDFWithEntry( document, plugin, nIdRecord, listEntry, listIdEntryConfig, locale );
+        document.close( );
+    }
 
 	/**
 	 * method to builder PDF with directory entry
