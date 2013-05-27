@@ -1,53 +1,50 @@
-<div id="content-box-actions">
-	<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/AdvancedParamaters.jsp">
-    	<input type="hidden" name="id_directory" value="${idDirectory}" />
-      	<input type="submit" value="#i18n{module.directory.pdfproducer.manage.producer.config.button.advanced-parameters}" class="button bt-toolbar" />
-  	</form>
-  	<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/CreateConfigProducer.jsp">
-    	<input type="hidden" name="id_directory" value="${idDirectory}" />
-      	<input type="submit" value="#i18n{module.directory.pdfproducer.manage.producer.config.button.create}" class="button bt-toolbar" />
-  	</form>
-</div>
-<div class="content-box">
-	<h2> #i18n{module.directory.pdfproducer.manage.producer.config.title} </h2>
-	<div class="content-box-content">
+<div class="row-fluid">
+	<div class="span12">
+		<fieldset>
+		<legend>#i18n{module.directory.pdfproducer.manage.producer.config.title}
+			<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/AdvancedParamaters.jsp" class="form-inline pull-right">
+				<input type="hidden" name="id_directory" value="${idDirectory}" />
+				<button type="submit" class="btn btn-primary btn-small" >
+					<i class="icon-cog icon-white"></i>&nbsp;#i18n{module.directory.pdfproducer.manage.producer.config.button.advanced-parameters}
+				</button>
+			</form>
+			<form method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/CreateConfigProducer.jsp" class="form-inline pull-right spaced">
+				<input type="hidden" name="id_directory" value="${idDirectory}" />
+				<button type="submit" class="btn btn-primary btn-small" >
+					<i class="icon-ok icon-white"></i>&nbsp;#i18n{module.directory.pdfproducer.manage.producer.config.button.create}
+				</button>
+			</form>
+		</legend>
 		<#if config_list?has_content>
-			<table name="results_list" id="results_list">
+			<table name="results_list" id="results_list"  class="table table-striped table-condensed">
 				<tr>
-					<th>
-						#i18n{module.directory.pdfproducer.manage.producer.config.name}
-					</th>
-					<th>
-						#i18n{module.directory.pdfproducer.manage.producer.config.type}
-					</th>		
-					<th>
-						#i18n{module.directory.pdfproducer.manage.producer.config.actions}
-					</th>	
+					<th>#i18n{module.directory.pdfproducer.manage.producer.config.name}</th>
+					<th>#i18n{module.directory.pdfproducer.manage.producer.config.type}</th>		
+					<th>#i18n{module.directory.pdfproducer.manage.producer.config.actions}</th>	
 				</tr>				
-					<#list config_list as config>
-						<tr>
-							<td>
-								${config.name}
-							</td>
-							<td>
-								${config.type}								
-							</td>
-							<td>
-								<a href="jsp/admin/plugins/directory/modules/pdfproducer/RemoveConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
-									<img src="images/admin/skin/plugins/directory/actions/delete.png" alt="" title="">
-							  	</a>
-							  	<a href="jsp/admin/plugins/directory/modules/pdfproducer/ModifyConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
-									<img src="images/admin/skin/plugins/directory/actions/modify.png" alt="" title="">
-							  	</a>
-							  	<a href="jsp/admin/plugins/directory/modules/pdfproducer/DoCopyConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
-									<img src="images/admin/skin/plugins/directory/actions/copy.png" alt="" title="">
-							  	</a>
-							</td>							
-						</tr>
-					</#list>
+				<#list config_list as config>
+				<tr>
+					<td>${config.name}</td>
+					<td>${config.type}</td>
+					<td>
+						<a class="btn btn-danger btn-small" href="jsp/admin/plugins/directory/modules/pdfproducer/RemoveConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
+							<i class="icon-trash icon-white"></i>
+						</a>
+						<a class="btn btn-primary btn-small" href="jsp/admin/plugins/directory/modules/pdfproducer/ModifyConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
+							<i class="icon-edit icon-white"></i>
+						</a>
+						<a class="btn btn-primary btn-small" href="jsp/admin/plugins/directory/modules/pdfproducer/DoCopyConfigProducer.jsp?id_config_producer=${config.idProducerConfig}&id_directory=${idDirectory}">
+							<i class="icon-plus-sign icon-white"></i>
+						</a>
+					</td>							
+				</tr>
+				</#list>
 			</table>
 		<#else>
-			#i18n{module.directory.pdfproducer.manage.producer.config.empty.list} 
+			<div class="alert alert-error">
+				#i18n{module.directory.pdfproducer.manage.producer.config.empty.list} 
+			</div>
 		</#if>
+		</fieldset>
 	</div>
 </div>

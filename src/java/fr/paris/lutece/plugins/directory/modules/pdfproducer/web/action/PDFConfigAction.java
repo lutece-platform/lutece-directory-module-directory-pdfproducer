@@ -73,7 +73,7 @@ public class PDFConfigAction extends AbstractPluginAction<DirectoryAdminSearchFi
 
     // PARAMETERS
     private static final String PARAMETER_ID_DIRECTORY = "id_directory";
-    private static final String PARAMETER_CONFIG_PRODUCER_ACTION = "config_producer.x";
+    private static final String PARAMETER_CONFIG_PRODUCER_ACTION = "config_producer";
 
     // MARK
     private static final String MARK_PERMISSION_MANAGE_PDFPRODUCER = "permission_manage_pdfproducer";

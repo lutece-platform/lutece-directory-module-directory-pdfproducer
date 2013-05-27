@@ -1,12 +1,17 @@
-<div class="content-box">
-	<h2>#i18n{module.directory.pdfproducer.error.pageTitle}</h2>
-	<form method="post" action="jsp/admin/AdminMenu.jsp">
-		<p>
-			<img src="images/admin/skin/messages/error.png" class="icon left" alt="" />
+<div class="row-fluid">
+	<div class="span12">
+	<fieldset>
+		<legend>#i18n{module.directory.pdfproducer.error.pageTitle}</h2>
+		<form method="post" action="jsp/admin/AdminMenu.jsp">
+		<div class="alert alert-error">
+			<img src="images/admin/skin/messages/error.png" class="" alt="error" title="" >
 			${error_message!}
-		</p>
-		<p>
-        	<input class="button" type="submit" value="#i18n{portal.util.labelOk}" />
-        </p>
+		</div>
+		<div class="form-actions">
+        	<button class="button" type="submit">
+				<i class="icon-ok icon-white"></i>&nbsp;#i18n{portal.util.labelOk}
+			</button>
+        </div>
 	</form>
+	</div>
 </div>

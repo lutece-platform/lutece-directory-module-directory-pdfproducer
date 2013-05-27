@@ -1,17 +1,19 @@
-<div class="content-box">
-	<h2> #i18n{module.directory.pdfproducer.create.producer.default.config.title} </h2>
-	<div class="content-box-content">
+<div class="row-fluid">
+	<div class="span12">
+		<fieldset>
+		<legend>#i18n{module.directory.pdfproducer.create.producer.default.config.title} </legend>
 		<form enctype="multipart/form-data" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoSaveAdvancedParameters.jsp">
 		<input type="hidden" name="id_directory" value="${idDirectory}" />
 		<#if config_list?exists && config_list?has_content >
-			<p id="config">
-			    <label for="config">#i18n{module.directory.pdfproducer.create.producer.default.config.label} * :</label>
-					<@combo name="id_default_config" items=config_list default_value=id_defaut_config_saved />&nbsp;
-				<br/>
-			</p>
+		<label for="config">#i18n{module.directory.pdfproducer.create.producer.default.config.label} * :</label>
+		<@combo name="id_default_config" items=config_list default_value=id_defaut_config_saved />&nbsp;
 		</#if>
-		<p>
-			<input class="button" type="submit" name="save" value="#i18n{module.directory.pdfproducer.create.producer.config.button.create}">
-		</p>
+		<div class="form-actions">
+			<button class="btn btn-small btn-primary" type="submit" name="save" >
+				<i class="icon-ok icon-white"></i>&nbsp;#i18n{module.directory.pdfproducer.create.producer.config.button.create}
+			</button>
+		</div>
+		</form>
+		</fieldset>
 	</div>
 </div>

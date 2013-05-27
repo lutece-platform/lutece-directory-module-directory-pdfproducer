@@ -2,81 +2,52 @@
 <#if position_entry_directory_filename?exists>
 	<#assign defaut_entry_directory_filename = position_entry_directory_filename>
 </#if>
-
-<div class="content-box">
-	<h2> #i18n{module.directory.pdfproducer.create.producer.config.title} </h2>
-	<div class="content-box-content">
-		<form enctype="multipart/form-data" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoCreateConfigProducer.jsp">
-			<label for="title">#i18n{module.directory.pdfproducer.create.producer.config.name} * : </label>
+<div class="row-fluid">
+	<div class="span12">
+	<fieldset>
+		<legend>#i18n{module.directory.pdfproducer.create.producer.config.title} </legend>
+		<form enctype="multipart/form-data" class="form-horizontal" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoCreateConfigProducer.jsp">
+			<input type="hidden" name="id_directory" value="${idDirectory}" >
+			<label for="title">#i18n{module.directory.pdfproducer.create.producer.config.name} * </label>
 			<#if config_name?exists>
-				<input type="text" maxlength="255" value="${config_name}" size="80" id="" name="name">
+				<input type="text" maxlength="255" value="${config_name}" class="input-xxlarge" id="" name="name">
 			<#else>
-				<input type="text" maxlength="255" value="" size="80" id="" name="name">
+				<input type="text" maxlength="255" value="" class="input-xxlarge" id="" name="name">
 			</#if>			
-			<input type="hidden" name="id_directory" value="${idDirectory}" />
-			
-			<p>
-				<label> #i18n{module.directory.pdfproducer.create.producer.config.namefile} * :</label>
-				<input type=radio name="type_config_file_name" value="default" 
-					<#if !mark_type_config_file_name?exists || mark_type_config_file_name='default'>
-						checked="checked"
-					</#if>				
-				/>
-				#i18n{module.directory.pdfproducer.create.producer.config.namefile-default}
-			</p>
+			<label class="radio"> #i18n{module.directory.pdfproducer.create.producer.config.namefile} *
+			<input type="radio" name="type_config_file_name" value="default" <#if !mark_type_config_file_name?exists || mark_type_config_file_name='default'>checked="checked"</#if>> #i18n{module.directory.pdfproducer.create.producer.config.namefile-default}
+			</label>
 			<#if list_entries_filename?exists && list_entries_filename?has_content >
-				<p id="entry_filename">
-				    <label> &nbsp;</label>
-				    	<input type=radio name="type_config_file_name" value="directory_entry"
-						    <#if mark_type_config_file_name?exists && mark_type_config_file_name='directory_entry'>
-								checked="checked"
-							</#if>
-						/>
-				    	#i18n{module.directory.pdfproducer.create.producer.config.namefile-field} :
-				    	<br />
-						<label> &nbsp;</label>
-						<@combo name="id_entry_filename" items=list_entries_filename default_value=defaut_entry_directory_filename />
-				</p>
+			<label class="radio">
+				<input type="radio" name="type_config_file_name" value="directory_entry"
+			  <#if mark_type_config_file_name?exists && mark_type_config_file_name='directory_entry'> checked="checked" </#if>>
+				    	#i18n{module.directory.pdfproducer.create.producer.config.namefile-field}</label>
+				<@combo name="id_entry_filename" items=list_entries_filename default_value=defaut_entry_directory_filename />
 			</#if>
-			<p>
-				<label> &nbsp;</label>
-				<input type=radio name="type_config_file_name" value="text"
-					<#if mark_type_config_file_name?exists && mark_type_config_file_name='text'>
-						checked="checked"
-					</#if>
-				/>
-				#i18n{module.directory.pdfproducer.create.producer.config.namefile-text} :
-				<br />
-				<label> &nbsp;</label>
-				<input type="text" maxlength="255" value="<#if mark_text_file_name?exists>${mark_text_file_name}</#if>" size="80" id="" name="text_file_name" />
-			</p>
-			<table width="100%">
+				<label class="radio">
+				<input type="radio" name="type_config_file_name" value="text"	<#if mark_type_config_file_name?exists && mark_type_config_file_name='text'>checked="checked"</#if>>
+				#i18n{module.directory.pdfproducer.create.producer.config.namefile-text}
+				</label>
+				<input type="text" maxlength="255" value="<#if mark_text_file_name?exists>${mark_text_file_name}</#if>" class="input-large" id="" name="text_file_name" />
+			<hr>
+			<table  class="table table-striped table-condensed">
 				<tr> 
-					<th width="50%"> 
-						#i18n{directory.modify_directory.manage_entry.row_title}
-					</th>
-					<th width="25%"> 
-						#i18n{directory.modify_directory.manage_entry.row_type}
-					</th>
-					<th width="25%"> 
-						#i18n{directory.modify_directory.manage_entry.row_actions}
-					</th>
+					<th>#i18n{directory.modify_directory.manage_entry.row_title}</th>
+					<th>#i18n{directory.modify_directory.manage_entry.row_type}</th>
+					<th>#i18n{directory.modify_directory.manage_entry.row_actions}</th>
 				</tr>
-			
 				<#if entry_list?has_content>
 					<#list entry_list as entry>
 						<tr>
 							<#if entry.entryType.group>
-								<td>
-									${entry.title}				
-								</td>
+								<td>${entry.title}</td>
 								<td>
 								<#if !entry.entryType.group>
 				           			#i18n{${entry.entryType.titleI18nKey}}
 				           		</#if>
 				           		</td>
 				           		<td>
-				           			<input type="hidden" name="config_entry" value="${entry.idEntry}" />
+				           			<input type="hidden" name="config_entry" value="${entry.idEntry}" >
 				           		</td>
 							<#elseif !entry.entryType.comment>
 								<td>
@@ -89,18 +60,17 @@
 				           		</td>
 				           		<td>
 				           			<#if id_entry_list?has_content && id_entry_list?seq_contains(entry.idEntry?string)>
-										<input type="checkbox" name="config_entry" value="${entry.idEntry}" checked="checked" />
+										<input type="checkbox" name="config_entry" value="${entry.idEntry}" checked="checked">
 									<#else>
-										<input type="checkbox" name="config_entry" value="${entry.idEntry}" />
+										<input type="checkbox" name="config_entry" value="${entry.idEntry}">
 									</#if>
-									
 				           		</td>
 							</#if>
 						</tr>
 						<#if entry.children?exists>
 							<#list entry.children as entry_child>
 								<tr>						
-									<td class="cell-indent">
+									<td>
 					               		<#if entry_child.entryType.comment>
 					              			${entry_child.comment}
 					              		<#else>
@@ -114,9 +84,9 @@
 					           		</td>
 					           		<td>
 					           			<#if id_entry_list?has_content && id_entry_list?seq_contains(entry_child.idEntry?string)>
-											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" checked="checked" />
+											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" checked="checked">
 										<#else>
-											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}" />
+											<input type="checkbox" name="config_entry" value="${entry_child.idEntry}">
 										</#if>
 					           		</td>
 				               	</tr>
@@ -125,11 +95,20 @@
 					</#list>
 				</#if>
 			</table> 
-			<p>
-				<input class="button" type="submit" name="save" value="#i18n{module.directory.pdfproducer.create.producer.config.button.create}" />
-				<input class="button" type="submit" name="cancel" value="#i18n{module.directory.pdfproducer.create.producer.config.button.cancel}" />		
-				<input class="button" type="submit" name="allchecked" value="#i18n{module.directory.pdfproducer.create.producer.config.button.allchecked}" />
-			</p>	
+			<div class="form-actions">
+				<button class="btn btn-primary btn-small" type="submit" name="save">
+					<i class="icon-ok icon-white"></i>&nbsp;
+					#i18n{module.directory.pdfproducer.create.producer.config.button.create}
+				</button>
+				<button class="btn btn-primary btn-small" type="submit" name="cancel">
+					<i class="icon-ok-circle icon-white"></i>&nbsp;
+					#i18n{module.directory.pdfproducer.create.producer.config.button.cancel}
+				</button>
+				<button class="btn btn-primary btn-small" type="submit" name="allchecked">
+					<i class="icon-check icon-white"></i>&nbsp;
+					#i18n{module.directory.pdfproducer.create.producer.config.button.allchecked}
+				</button>
+			</div>	
 		</form>	
 	</div>
 </div>
