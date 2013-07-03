@@ -55,7 +55,7 @@ public class DirectoryPDFProducerPlugin extends PluginDefaultImplementation
     public static final String DIRECTORY_ACTION_NAME_KEY = "module.directory.pdfproducer.actions.extractpdf.name";
     public static final String DIRECTORY_ACTION_DESCRIPTION = "module.directory.pdfproducer.actions.extractpdf.description";
     public static final String DIRECTORY_ACTION_URL = "jsp/admin/plugins/directory/modules/pdfproducer/action/DoDownloadPDF.jsp";
-    public static final String DIRECTORY_ACTION_URL_ICON_PDF = "images/admin/skin/plugins/directory/modules/pdfproducer/pdf.png";
+    public static final String DIRECTORY_ACTION_URL_ICON_PDF = "icon-file";
     public static final String DIRECTORY_ACTION_PERMISSION = "PDFPRODUCER";
     public static final int DIRECTORY_ACTION_STATE_0 = 0;
     public static final int DIRECTORY_ACTION_STATE_1 = 1;
@@ -66,7 +66,7 @@ public class DirectoryPDFProducerPlugin extends PluginDefaultImplementation
     public void init(  )
     {
         //ConfigProducerHome.addActionsDirectoryRecord( PluginService.getPlugin( PLUGIN_NAME ) );
-        checkAndAddNewDirectoryRecordAction(  );
+        //        checkAndAddNewDirectoryRecordAction(  );
 
         DirectoryPDFProducerRemovalListener listenerDirectory = new DirectoryPDFProducerRemovalListener(  );
         EntryPDFProducerRemovalListener listenerEntry = new EntryPDFProducerRemovalListener(  );
