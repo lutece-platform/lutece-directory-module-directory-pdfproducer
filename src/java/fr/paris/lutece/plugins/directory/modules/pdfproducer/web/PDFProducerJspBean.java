@@ -39,7 +39,6 @@ import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.DefaultConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.ConfigProducerService;
-import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerPlugin;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerResourceIdService;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.utils.PDFUtils;
 import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
@@ -140,8 +139,8 @@ public class PDFProducerJspBean extends PluginAdminPageJspBean
 
     // Type Config
     private static final String TYPE_CONFIG_PDF = "PDF";
-    private static final ConfigProducerService _manageConfigProducerService = (ConfigProducerService) SpringContextService.getPluginBean( DirectoryPDFProducerPlugin.PLUGIN_NAME,
-            "directory-pdfproducer.manageConfigProducer" );
+    private static final ConfigProducerService _manageConfigProducerService = SpringContextService
+            .getBean( "directory-pdfproducer.manageConfigProducer" );
 
     /**
      * Display the page to manage configuration
