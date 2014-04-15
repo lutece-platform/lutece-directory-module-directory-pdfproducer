@@ -33,32 +33,31 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.DirectoryPDFProducerPlugin;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
-
 import java.util.List;
 import java.util.Locale;
+
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 
 /**
  * ConfigProducerHome
- *
+ * 
  */
 public final class ConfigProducerHome
 {
-    private static IConfigProducerDAO _dao = (IConfigProducerDAO) SpringContextService.getPluginBean( DirectoryPDFProducerPlugin.PLUGIN_NAME,
-            "configProducerDAO" );
+    private static IConfigProducerDAO _dao = SpringContextService.getBean( "configProducerDAO" );
 
     /**
      * Constructor
      */
-    private ConfigProducerHome(  )
+    private ConfigProducerHome( )
     {
     }
 
     /**
-     * This method add a new config with different directory entry selected by AdminUser
+     * This method add a new config with different directory entry selected by
+     * AdminUser
      * @param plugin The plugin
      * @param configProducer configuration
      * @param listIdEntry The list of entry id that appear in configuration

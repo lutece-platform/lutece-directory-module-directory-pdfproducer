@@ -33,14 +33,14 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-import fr.paris.lutece.portal.service.i18n.I18nService;
-
 import java.util.Locale;
+
+import fr.paris.lutece.portal.service.i18n.I18nService;
 
 
 /**
  * DefaultConfigProducer
- *
+ * 
  */
 public class DefaultConfigProducer implements IConfigProducer
 {
@@ -51,7 +51,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _nIdProducerConfig
      */
-    public int getIdProducerConfig(  )
+    public int getIdProducerConfig( )
     {
         return -1;
     }
@@ -66,7 +66,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _strName
      */
-    public String getName(  )
+    public String getName( )
     {
         return null;
     }
@@ -90,7 +90,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _nIdEntryFileName
      */
-    public int getIdEntryFileName(  )
+    public int getIdEntryFileName( )
     {
         return -1;
     }
@@ -98,7 +98,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the FileName
      */
-    public int getFileName(  )
+    public int getFileName( )
     {
         return -1;
     }
@@ -113,7 +113,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _nIdDirectory
      */
-    public int getIdDirectory(  )
+    public int getIdDirectory( )
     {
         return -1;
     }
@@ -128,7 +128,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _strType
      */
-    public String getType(  )
+    public String getType( )
     {
         return _strType;
     }
@@ -144,7 +144,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _strTypeConfigFileName
      */
-    public String getTypeConfigFileName(  )
+    public String getTypeConfigFileName( )
     {
         return DEFAULT_TYPE_FILE_NAME;
     }
@@ -159,7 +159,7 @@ public class DefaultConfigProducer implements IConfigProducer
     /**
      * @return the _strTextFileName
      */
-    public String getTextFileName(  )
+    public String getTextFileName( )
     {
         return null;
     }
@@ -168,6 +168,21 @@ public class DefaultConfigProducer implements IConfigProducer
      * @param strTextFileName the _strTextFileName to set
      */
     public void setTextFileName( String strTextFileName )
+    {
+    }
+
+    /**
+     * @return the _bExtractNotFilled
+     */
+    public Boolean getExtractNotFilled( )
+    {
+        return true;
+    }
+
+    /**
+     * @param bExtractNotFilled the _bExtractNotFilled to set
+     */
+    public void setExtractNotFilled( Boolean bExtractNotFilled )
     {
     }
 }

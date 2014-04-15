@@ -33,11 +33,11 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-
 /**
  * Configuration to generate PDF.
- * AdminUser can select different directory entry to make them appear in the PDF.
- *
+ * AdminUser can select different directory entry to make them appear in the
+ * PDF.
+ * 
  */
 public class ConfigProducer implements IConfigProducer
 {
@@ -48,11 +48,12 @@ public class ConfigProducer implements IConfigProducer
     private String _strType;
     private String _strTypeConfigFileName;
     private String _strTextFileName;
+    private Boolean _bExtractNotFilled;
 
     /**
      * @return the _nIdProducerConfig
      */
-    public int getIdProducerConfig(  )
+    public int getIdProducerConfig( )
     {
         return _nIdProducerConfig;
     }
@@ -68,7 +69,7 @@ public class ConfigProducer implements IConfigProducer
     /**
      * @return the _strName
      */
-    public String getName(  )
+    public String getName( )
     {
         return _strName;
     }
@@ -84,7 +85,7 @@ public class ConfigProducer implements IConfigProducer
     /**
      * @return the _nIdEntryFileName
      */
-    public int getIdEntryFileName(  )
+    public int getIdEntryFileName( )
     {
         return _nIdEntryFileName;
     }
@@ -100,7 +101,7 @@ public class ConfigProducer implements IConfigProducer
     /**
      * @return the _nIdDirectory
      */
-    public int getIdDirectory(  )
+    public int getIdDirectory( )
     {
         return _nIdDirectory;
     }
@@ -116,7 +117,7 @@ public class ConfigProducer implements IConfigProducer
     /**
      * @return the _strType
      */
-    public String getType(  )
+    public String getType( )
     {
         return _strType;
     }
@@ -132,7 +133,7 @@ public class ConfigProducer implements IConfigProducer
     /**
      * @return the _strTypeConfigFileName
      */
-    public String getTypeConfigFileName(  )
+    public String getTypeConfigFileName( )
     {
         return _strTypeConfigFileName;
     }
@@ -148,7 +149,7 @@ public class ConfigProducer implements IConfigProducer
     /**
      * @return the _strTextFileName
      */
-    public String getTextFileName(  )
+    public String getTextFileName( )
     {
         return _strTextFileName;
     }
@@ -159,5 +160,21 @@ public class ConfigProducer implements IConfigProducer
     public void setTextFileName( String strTextFileName )
     {
         _strTextFileName = strTextFileName;
+    }
+
+    /**
+     * @return the _bExtractNotFilled
+     */
+    public Boolean getExtractNotFilled( )
+    {
+        return _bExtractNotFilled;
+    }
+
+    /**
+     * @param bExtractNotFilled the _bExtractNotFilled to set
+     */
+    public void setExtractNotFilled( Boolean bExtractNotFilled )
+    {
+        this._bExtractNotFilled = bExtractNotFilled;
     }
 }

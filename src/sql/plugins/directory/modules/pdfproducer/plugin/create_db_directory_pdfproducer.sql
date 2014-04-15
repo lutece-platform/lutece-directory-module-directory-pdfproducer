@@ -13,6 +13,7 @@ CREATE TABLE directory_config_producer (
   config_type VARCHAR(255) DEFAULT NULL,
   text_file_name VARCHAR(255) DEFAULT NULL,
   type_config_file_name VARCHAR(255) DEFAULT NULL,
+  extract_empty INT DEFAULT 0,
   PRIMARY KEY  (id_config)
   );
   

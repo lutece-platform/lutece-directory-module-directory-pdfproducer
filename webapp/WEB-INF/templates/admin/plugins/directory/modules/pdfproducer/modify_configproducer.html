@@ -36,6 +36,9 @@
 				#i18n{module.directory.pdfproducer.create.producer.config.namefile-text} :
 			</label>
 			<input type="text" maxlength="255" value="<#if mark_text_file_name?exists>${mark_text_file_name}</#if>" class="input-large" id="" name="text_file_name" />
+			<br />
+			<input type="checkbox" id="export_not_empty" name="export_not_empty" <#if !config_producer.extractNotFilled>checked="checked"</#if> />
+			&nbsp;#i18n{module.directory.pdfproducer.create.producer.config.extract}
 			<hr>
 			<table class="table table-striped table-condensed">
 				<tr> 

@@ -33,18 +33,17 @@
  */
 package fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig;
 
-
 /**
- *
+ * 
  * IConfigProducer
- *
+ * 
  */
 public interface IConfigProducer
 {
     /**
-    * @return the _nIdProducerConfig
-    */
-    int getIdProducerConfig(  );
+     * @return the _nIdProducerConfig
+     */
+    int getIdProducerConfig( );
 
     /**
      * @param nIdProducerConfig the _nIdProducerConfig to set
@@ -54,7 +53,7 @@ public interface IConfigProducer
     /**
      * @return the _strName
      */
-    String getName(  );
+    String getName( );
 
     /**
      * @param nIdEntryFileName the _nIdEntryFileName to set
@@ -64,7 +63,7 @@ public interface IConfigProducer
     /**
      * @return the _nIdEntryFileName
      */
-    int getIdEntryFileName(  );
+    int getIdEntryFileName( );
 
     /**
      * @param strName the _strName to set
@@ -74,7 +73,7 @@ public interface IConfigProducer
     /**
      * @return the _nIdDirectory
      */
-    int getIdDirectory(  );
+    int getIdDirectory( );
 
     /**
      * @param nIdDirectory the _nIdDirectory to set
@@ -84,7 +83,7 @@ public interface IConfigProducer
     /**
      * @return the _strType
      */
-    String getType(  );
+    String getType( );
 
     /**
      * @param strType the _strType to set
@@ -94,7 +93,7 @@ public interface IConfigProducer
     /**
      * @return the _strTypeConfigFileName
      */
-    String getTypeConfigFileName(  );
+    String getTypeConfigFileName( );
 
     /**
      * @param strTypeConfigFileName the _strTypeConfigFileName to set
@@ -104,10 +103,20 @@ public interface IConfigProducer
     /**
      * @return the _strTextFileName
      */
-    String getTextFileName(  );
+    String getTextFileName( );
 
     /**
      * @param strTextFileName the _strTextFileName to set
      */
     void setTextFileName( String strTextFileName );
+
+    /**
+     * @return the _bExtractNotFilled
+     */
+    Boolean getExtractNotFilled( );
+
+    /**
+     * @param bExtractNotFilled the _bExtractNotFilled to set
+     */
+    void setExtractNotFilled( Boolean bExtractNotFilled );
 }
