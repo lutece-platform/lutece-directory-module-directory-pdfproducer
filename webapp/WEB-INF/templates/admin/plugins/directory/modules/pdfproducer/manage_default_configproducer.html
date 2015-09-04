@@ -1,23 +1,29 @@
-<div class="row-fluid">
-	<div class="span12">
-		<fieldset>
-			<legend>#i18n{module.directory.pdfproducer.create.producer.default.config.title} </legend>
-			<form enctype="multipart/form-data" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoSaveAdvancedParameters.jsp">
-				<input type="hidden" name="id_directory" value="${idDirectory}" />
-				<#if config_list?exists && config_list?has_content >
-				<div class="control-group">
-					<label class="control-label" for="config">#i18n{module.directory.pdfproducer.create.producer.default.config.label} * </label>
-					<div class="controls">
-						<@combo name="id_default_config" items=config_list default_value=id_defaut_config_saved />&nbsp;
-					</div>	
-				</div>	
-				</#if>
-				<div class="form-actions">
-					<button class="btn btn-small btn-primary" type="submit" name="save" >
-						<i class="icon-ok icon-white"></i>&nbsp;#i18n{module.directory.pdfproducer.create.producer.config.button.create}
-					</button>
-				</div>
-			</form>
-		</fieldset>
+<div class="row">
+	<div class="col-xs-12 col-sm-12">
+		<div class="box box-primary">
+			<div class="box-header">
+				<h3 class="box-title">#i18n{module.directory.pdfproducer.create.producer.default.config.title} </h3>
+			</div>
+			<div class="box-body">
+				<form enctype="multipart/form-data" class="form-horizontal" name="" method="post" action="jsp/admin/plugins/directory/modules/pdfproducer/DoSaveAdvancedParameters.jsp">
+					<input type="hidden" name="id_directory" value="${idDirectory}">
+					<#if config_list?exists && config_list?has_content >
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-2" for="config">#i18n{module.directory.pdfproducer.create.producer.default.config.label} * </label>
+						<div class="col-xs-12 col-sm-9">
+							<@comboWithParams name="id_default_config" default_value=id_defaut_config_saved?string additionalParameters=" class=\"form-control\" " items=config_list />
+						</div>
+					</div>
+					</#if>
+					<div class="form-group">
+						<div class="col-xs-12 col-sm-offset-3 col-sm-9">
+							<button class="btn btn-flat btn-primary" type="submit" name="save" >
+								<i class="fa fa-check"></i> #i18n{module.directory.pdfproducer.create.producer.config.button.create}
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
