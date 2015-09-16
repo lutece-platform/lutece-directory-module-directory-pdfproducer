@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-directory-pdfproducer</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <name>Lutece directory pdfproducer module</name>
 	
     <repositories>
@@ -54,7 +54,7 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-directory-module-directory-pdfproducer.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-directory-module-directory-pdfproducer.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-directory-module-directory-pdfproducer.git</url>
-      <tag>lutece-directory-module-directory-pdfproducer-1.2.0</tag>
+      <tag>HEAD</tag>
   </scm>
 	
 </project>
